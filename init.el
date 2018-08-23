@@ -1,13 +1,10 @@
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
 (package-initialize)
-(eval-when-compile
-  (require 'use-package))
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
+
+(eval-when-compile
+  (require 'use-package))
 
 (global-set-key (kbd "C-c , s") 'semantic-ia-show-summary)
 
@@ -73,3 +70,7 @@
 (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 (scroll-bar-mode -1)
 (nyan-mode)
+
+(setq ring-bell-function 'ignore)
+(setq make-backup-files nil)
+(setq inhibit-startup-screen t)
