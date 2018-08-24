@@ -6,18 +6,18 @@
 
 (eval-when-compile
   (require 'use-package))
+(require 'bind-key) ;; for use-package :bind
 (setq use-package-verbose 1)
+
 (when (display-graphic-p)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
-  (setq initial-frame-alist '((tool-bar-lines . 0) (width . 115) (height . 35)))
-  (setq default-frame-alist '((tool-bar-lines . 0) (width . 115) (height . 35))))
+  (set-frame-size (selected-frame) 115 35)) ;; better: add "-geometry 115x35" to Windows shortcut
 
 (when (eq system-type 'windows-nt)
   (setq gc-cons-threshold (* 512 1024 1024))
   (setq gc-cons-percentage 0.5)
   (run-with-idle-timer 5 t #'garbage-collect)
-  ;; 显示垃圾回收信息，这个可以作为调试用
   ;; (setq garbage-collection-messages t)
   (setq w32-recognize-altgr nil)
   )
@@ -81,12 +81,15 @@
   :bind (("C-<f8>" . imenu-list-smart-toggle)))
 
 (use-package neotree
+  :ensure t
   :bind (("<f8>" . neotree-toggle))
   :config
   (use-package all-the-icons)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 (use-package nyan-mode
+  :if window-system
+  :ensure t
   :init (nyan-mode))
 
 (setq ring-bell-function 'ignore)
