@@ -62,12 +62,22 @@
 (require 'yasnippet)
 (yas-reload-all)
 (add-hook 'org-mode-hook #'yas-minor-mode)
+
 (require 'wget)
 
-(global-set-key (kbd "C-<f8>") #'imenu-list-smart-toggle)
-(global-set-key [f8] 'neotree-toggle)
-(require 'all-the-icons)
-(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+(use-package imenu-list
+  :bind (("C-<f8>" . imenu-list-smart-toggle)))
+
+(use-package all-the-icons)
+
+(use-package neotree
+  :bind (("<f8>" . neotree-toggle))
+  :init
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
+
+(use-package nyan-mode
+  :init (nyan-mode))
+
 (scroll-bar-mode -1)
 (nyan-mode)
 

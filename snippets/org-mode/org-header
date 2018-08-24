@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: org
+# key: org
+# --
+#+STARTUP: showall
+#+TITLE: `(file-name-base (buffer-name))`
+#+OPTIONS: num:nil ^:{}
