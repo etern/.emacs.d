@@ -1,22 +1,15 @@
 (package-initialize)
+(push '("Melpa Stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/") package-archives)
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
 (eval-when-compile
   (require 'use-package))
-
-(global-set-key (kbd "C-c , s") 'semantic-ia-show-summary)
-
-;;cmake-mode
-(setq auto-mode-alist
-          (append
-           '(("CMakeLists\\.txt\\'" . cmake-mode))
-           '(("\\.cmake\\'" . cmake-mode))
-           auto-mode-alist))
-(autoload 'cmake-mode "cmake-mode" t)
-
+(setq use-package-verbose 1)
 (when (display-graphic-p)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
   (setq initial-frame-alist '((tool-bar-lines . 0) (width . 115) (height . 35)))
   (setq default-frame-alist '((tool-bar-lines . 0) (width . 115) (height . 35))))
 
@@ -33,9 +26,6 @@
                   'han (font-spec :family "Microsoft Yahei"))
 
 (global-set-key (kbd "M-g M-g") 'avy-goto-line)
-(setq org-agenda-files (directory-files-recursively "E:/opt/knowledges/" "\.org$"))
-(setq org-refile-targets '((nil :maxlevel . 9)
-                           (org-agenda-files :maxlevel . 9)))
 ;;(setq org-refile-use-outline-path nil)
 
 ;;(yas-global-mode 1)
@@ -54,32 +44,50 @@
 
 (push "~/.emacs.d/lisp" load-path)
 
-(load "setup-org-publish.el")
+(load "setup-org-knowledge-project.el")
 
-(require 'org-bullets)
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+(use-package magit
+  :init
+  (setq magit-diff-use-overlays nil))
 
-(require 'yasnippet)
-(yas-reload-all)
-(add-hook 'org-mode-hook #'yas-minor-mode)
+(use-package ivy
+  :init (ivy-mode 1))
+
+(use-package semantic
+  :bind ("C-c , s" . semantic-ia-show-summary))
+
+;;(use-package ede
+;;  :init
+;;  (global-ede-mode))
+
+(use-package cmake-mode
+  :commands cmake-mode
+  :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'")) ;;add to auto-mode-alist
+
+(use-package org-bullets
+  :init
+  (add-hook 'org-mode-hook #'org-bullets-mode))
+
+(use-package yasnippet
+  :commands (yas-minor-mode yas-reload-all)
+  :init
+  (add-hook 'org-mode-hook #'yas-minor-mode)
+  :config
+  (yas-reload-all))
 
 (require 'wget)
 
 (use-package imenu-list
   :bind (("C-<f8>" . imenu-list-smart-toggle)))
 
-(use-package all-the-icons)
-
 (use-package neotree
   :bind (("<f8>" . neotree-toggle))
-  :init
+  :config
+  (use-package all-the-icons)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 (use-package nyan-mode
   :init (nyan-mode))
-
-(scroll-bar-mode -1)
-(nyan-mode)
 
 (setq ring-bell-function 'ignore)
 (setq make-backup-files nil)

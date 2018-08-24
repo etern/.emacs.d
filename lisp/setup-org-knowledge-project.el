@@ -1,3 +1,9 @@
+
+(setq org-agenda-files (directory-files-recursively "E:/opt/knowledges/" "\.org$"))
+
+(setq org-refile-targets '((nil :maxlevel . 9)
+                           (org-agenda-files :maxlevel . 9)))
+
 (setq org-publish-project-alist
       '(("knowledges-pages"
          :base-directory "E:/opt/knowledges/"
