@@ -2,6 +2,8 @@
 (push '("Melpa Stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/") package-archives)
 
 (setq custom-file "~/.emacs.d/custom.el")
+(unless (file-exists-p custom-file)
+  (write-region "" nil custom-file)) ;; touch file
 (load custom-file)
 
 (eval-when-compile
