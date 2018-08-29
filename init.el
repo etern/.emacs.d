@@ -9,7 +9,13 @@
 (eval-when-compile
   (require 'use-package))
 (require 'bind-key) ;; for use-package :bind
+(require 'diminish) ;; for use-package :diminish
 (setq use-package-verbose 1)
+
+(setq ring-bell-function 'ignore)
+(setq make-backup-files nil)
+(setq inhibit-startup-screen t)
+(desktop-save-mode 1)
 
 (when (display-graphic-p)
   (tool-bar-mode -1)
@@ -50,10 +56,12 @@
 
 (use-package magit
   :init
-  (setq magit-diff-use-overlays nil))
+  (setq magit-diff-use-overlays nil)
+  :bind ("C-x g" . magit-status))
 
 (use-package ivy
-  :init (ivy-mode 1))
+  :init (ivy-mode 1)
+  :diminish ivy-mode)
 
 (use-package semantic
   :bind ("C-c , s" . semantic-ia-show-summary))
@@ -93,7 +101,3 @@
   :if window-system
   :ensure t
   :init (nyan-mode))
-
-(setq ring-bell-function 'ignore)
-(setq make-backup-files nil)
-(setq inhibit-startup-screen t)
