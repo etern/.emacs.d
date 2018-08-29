@@ -20,20 +20,17 @@
 (when (display-graphic-p)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
-  (set-frame-size (selected-frame) 115 35)) ;; better: add "-geometry 115x35" to Windows shortcut
+  (set-frame-size (selected-frame) 115 35) ;; better: add "-geometry 115x35" to Windows shortcut
+  (set-fontset-font (frame-parameter nil 'font)
+                  'han (font-spec :family "Microsoft Yahei")))
 
 (when (eq system-type 'windows-nt)
   (setq gc-cons-threshold (* 512 1024 1024))
   (setq gc-cons-percentage 0.5)
   (run-with-idle-timer 5 t #'garbage-collect)
   ;; (setq garbage-collection-messages t)
-  (setq w32-recognize-altgr nil)
-  )
+  (setq w32-recognize-altgr nil))
 
-(set-fontset-font (frame-parameter nil 'font)
-                  'han (font-spec :family "Microsoft Yahei"))
-
-(global-set-key (kbd "M-g M-g") 'avy-goto-line)
 ;;(setq org-refile-use-outline-path nil)
 
 ;;(yas-global-mode 1)
@@ -53,6 +50,10 @@
 (push "~/.emacs.d/lisp" load-path)
 
 (load "setup-org-knowledge-project.el")
+
+(use-package avy
+  :ensure t
+  :bind ("M-g M-g" . avy-goto-line))
 
 (use-package magit
   :init
