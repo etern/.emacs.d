@@ -1,5 +1,6 @@
 (package-initialize)
 (push '("Melpa Stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/") package-archives)
+(push '("Melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") package-archives)
 
 (setq custom-file "~/.emacs.d/custom.el")
 (unless (file-exists-p custom-file)
@@ -15,7 +16,8 @@
 (setq ring-bell-function 'ignore)
 (setq make-backup-files nil)
 (setq inhibit-startup-screen t)
-(desktop-save-mode 1)
+;;(desktop-save-mode 1)
+(show-paren-mode)
 
 (when (display-graphic-p)
   (tool-bar-mode -1)
@@ -46,6 +48,8 @@
             1))
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c a") 'org-agenda)
+
+(setq org-image-actual-width nil) ;; to show resized image
 
 (push "~/.emacs.d/lisp" load-path)
 
@@ -102,3 +106,15 @@
   :if window-system
   :ensure t
   :init (nyan-mode))
+
+(use-package org-present
+  :commands org-present
+  :config
+  (add-hook 'org-present-mode-hook
+            (lambda ()
+              (org-present-big)
+              (org-display-inline-images)))
+  (add-hook 'org-present-mode-quit-hook
+            (lambda ()
+              (org-present-small)
+              (org-remove-inline-images))))
