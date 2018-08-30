@@ -18,6 +18,7 @@
 (setq inhibit-startup-screen t)
 ;;(desktop-save-mode 1)
 (show-paren-mode)
+(add-hook 'c-mode-common-hook (lambda () (abbrev-mode -1)))
 
 (when (display-graphic-p)
   (tool-bar-mode -1)
@@ -110,11 +111,17 @@
 (use-package org-present
   :commands org-present
   :config
+  (use-package hide-mode-line
+    :ensure t)
   (add-hook 'org-present-mode-hook
             (lambda ()
               (org-present-big)
-              (org-display-inline-images)))
+              (org-display-inline-images)
+              (hide-mode-line-mode 1)
+              (menu-bar-mode -1)))
   (add-hook 'org-present-mode-quit-hook
             (lambda ()
               (org-present-small)
-              (org-remove-inline-images))))
+              (org-remove-inline-images)
+              (hide-mode-line-mode -1)
+              (menu-bar-mode 1))))
