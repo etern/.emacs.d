@@ -18,6 +18,7 @@
 (setq inhibit-startup-screen t)
 ;;(desktop-save-mode 1)
 (show-paren-mode)
+(blink-cursor-mode -1)
 (add-hook 'c-mode-common-hook (lambda () (abbrev-mode -1)))
 
 (when (display-graphic-p)
