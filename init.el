@@ -7,6 +7,11 @@
   (write-region "" nil custom-file)) ;; touch file
 (load custom-file)
 
+;; Bootstrap `use-package`
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
 (eval-when-compile
   (require 'use-package))
 (require 'bind-key) ;; for use-package :bind
@@ -35,12 +40,12 @@
   ;; (setq garbage-collection-messages t)
   (setq w32-recognize-altgr nil))
 
-;;(setq org-refile-use-outline-path nil)
-
 ;;(yas-global-mode 1)
 (setq epa-file-select-keys nil)
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+(setq scroll-conservatively 1000) ;; don't recenter point
 
-;; 必须在 (require 'org) 之前
+;; Must set before (require 'org)
 (setq org-emphasis-regexp-components
       ;; markup 记号前后允许中文
       (list (concat " \t('\"{"            "[:nonascii:]")
@@ -48,14 +53,42 @@
             " \t\r\n,\"'"
             "."
             1))
-(global-set-key (kbd "C-c l") 'org-store-link)
-(global-set-key (kbd "C-c a") 'org-agenda)
-
-(setq org-image-actual-width nil) ;; to show resized image
-
 (push "~/.emacs.d/lisp" load-path)
 
 (load "setup-org-knowledge-project.el")
+
+(use-package org
+  :defer t
+  :config
+  (use-package org-download
+    :config
+    (add-hook 'org-mode-hook #'org-download-enable))
+  (use-package org-bullets
+    :init
+    (add-hook 'org-mode-hook #'org-bullets-mode))
+  (use-package org-present
+    :commands org-present
+    :config
+    (use-package hide-mode-line
+      :ensure t)
+    (add-hook 'org-present-mode-hook
+              (lambda ()
+                (org-present-big)
+                (org-display-inline-images)
+                (hide-mode-line-mode 1)
+                (menu-bar-mode -1)))
+    (add-hook 'org-present-mode-quit-hook
+              (lambda ()
+                (org-present-small)
+                (org-remove-inline-images)
+                (hide-mode-line-mode -1)
+                (menu-bar-mode 1))))
+
+  (setq org-image-actual-width nil) ;; to show resized image
+  ;;(setq org-refile-use-outline-path nil)
+  :bind (("C-c l" . org-store-link)
+         ("C-c a" . org-agenda))
+)
 
 (use-package avy
   :ensure t
@@ -81,10 +114,6 @@
   :commands cmake-mode
   :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'")) ;;add to auto-mode-alist
 
-(use-package org-bullets
-  :init
-  (add-hook 'org-mode-hook #'org-bullets-mode))
-
 (use-package yasnippet
   :commands (yas-minor-mode yas-reload-all)
   :init
@@ -109,27 +138,15 @@
   :ensure t
   :init (nyan-mode))
 
-(use-package org-present
-  :commands org-present
-  :config
-  (use-package hide-mode-line
-    :ensure t)
-  (add-hook 'org-present-mode-hook
-            (lambda ()
-              (org-present-big)
-              (org-display-inline-images)
-              (hide-mode-line-mode 1)
-              (menu-bar-mode -1)))
-  (add-hook 'org-present-mode-quit-hook
-            (lambda ()
-              (org-present-small)
-              (org-remove-inline-images)
-              (hide-mode-line-mode -1)
-              (menu-bar-mode 1))))
-
 (use-package multiple-cursors
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-<" . mc/mark-all-like-this)
          ("<mouse-2>" . mc/add-cursor-on-click)))
+
+(use-package which-key
+  :ensure t
+  :init (which-key-mode)
+  :diminish which-key-mode)
+
