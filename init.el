@@ -1,6 +1,7 @@
 (package-initialize)
-(push '("Melpa Stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/") package-archives)
-(push '("Melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") package-archives)
+(setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+                         ("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/")
+                         ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 
 (setq custom-file "~/.emacs.d/custom.el")
 (unless (file-exists-p custom-file)
@@ -8,6 +9,10 @@
 (load custom-file)
 
 ;; Bootstrap `use-package`
+(setq package-pinned-packages
+      '((bind-key    . "melpa-stable")
+        (diminish    . "melpa-stable")
+        (use-package . "melpa-stable")))
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -56,6 +61,9 @@
 (push "~/.emacs.d/lisp" load-path)
 
 (load "setup-org-knowledge-project.el")
+(load "my-functions.el")
+
+(global-set-key (kbd "C-x |") #'toggle-window-split)
 
 (use-package org
   :defer t
