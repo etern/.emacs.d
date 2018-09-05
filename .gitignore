@@ -1,0 +1,9 @@
+elpa/
+semanticdb/
+.emacs.desktop
+tramp
+notes
+ido.last
+.mc-lists.el
+eshell/history
+eshell/lastdir
