@@ -64,13 +64,17 @@
 (load "my-functions.el")
 
 (global-set-key (kbd "C-x |") #'toggle-window-split)
+(global-set-key (kbd "C-c i") #'imenu)
 
 (use-package org
   :defer t
   :config
   (use-package org-download
+    :init
+    (setq org-download-image-dir "./org-download-images") ;; this dir will be auto-created
     :config
-    (add-hook 'org-mode-hook #'org-download-enable))
+    (add-hook 'org-mode-hook #'org-download-enable)
+    (setq org-download-timestamp "")) ;; don't append time string to image name
   (use-package org-bullets
     :init
     (add-hook 'org-mode-hook #'org-bullets-mode))
@@ -124,6 +128,7 @@
 
 (use-package yasnippet
   :commands (yas-minor-mode yas-reload-all)
+  :diminish yas-minor-mode
   :init
   (add-hook 'org-mode-hook #'yas-minor-mode)
   :config
