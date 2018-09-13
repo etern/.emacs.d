@@ -36,7 +36,10 @@
   (scroll-bar-mode -1)
   (set-frame-size (selected-frame) 115 35) ;; better: add "-geometry 115x35" to Windows shortcut
   (set-fontset-font (frame-parameter nil 'font)
-                  'han (font-spec :family "Microsoft Yahei")))
+                    'han (font-spec :family "Microsoft Yahei"))
+  (set-face-attribute 'mode-line nil :box nil) ;; flat mode line
+  (set-face-attribute 'mode-line-inactive nil :box nil)
+  )
 
 (when (eq system-type 'windows-nt)
   (setq gc-cons-threshold (* 512 1024 1024))
@@ -96,7 +99,11 @@
                 (hide-mode-line-mode -1)
                 (menu-bar-mode 1))))
 
-  (setq org-image-actual-width nil) ;; to show resized image
+  (when (display-graphic-p)
+    (setq org-image-actual-width nil) ;; to show resized image
+    (set-face-attribute 'org-table nil
+                        :fontset (create-fontset-from-fontset-spec
+                                  "-*-*-*-*-*--*-*-*-*-*-*-fontset-orgtable, han:宋体:size=18")))
   ;;(setq org-refile-use-outline-path nil)
   :bind (("C-c l" . org-store-link)
          ("C-c a" . org-agenda))
