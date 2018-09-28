@@ -48,6 +48,21 @@
   ;; (setq garbage-collection-messages t)
   (setq w32-recognize-altgr nil))
 
+(when (eq system-type 'darwin)
+  (defvar mac-current-keyboard 'embedded)
+  (defun mac-toggle-keyboard ()
+    (interactive)
+    (if (eq mac-current-keyboard 'embedded)
+	(progn ;; remap for USB keyboard
+	  (setq mac-current-keyboard 'usb)
+	  (setq mac-option-modifier 'meta)
+	  (setq mac-command-modifier 'super))
+      (progn ;; remap for embedded keyboard
+	(setq mac-current-keyboard 'embedded)
+	(setq mac-option-modifier 'control)
+	(setq mac-command-modifier 'meta))))
+  (global-set-key (kbd "M-<f11>") 'toggle-frame-fullscreen))
+
 ;;(yas-global-mode 1)
 (setq epa-file-select-keys nil)
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
@@ -63,7 +78,7 @@
             1))
 (push "~/.emacs.d/lisp" load-path)
 
-(load "setup-org-knowledge-project.el")
+;;(load "setup-org-knowledge-project.el")
 (load "my-functions.el")
 
 (global-set-key (kbd "C-x |") #'toggle-window-split)
