@@ -49,19 +49,21 @@
   (setq w32-recognize-altgr nil))
 
 (when (eq system-type 'darwin)
-  (defvar mac-current-keyboard 'embedded)
+  (defvar mac-current-keyboard 'usb)
   (defun mac-toggle-keyboard ()
     (interactive)
-    (if (eq mac-current-keyboard 'embedded)
-	(progn ;; remap for USB keyboard
-	  (setq mac-current-keyboard 'usb)
-	  (setq mac-option-modifier 'meta)
-	  (setq mac-command-modifier 'super))
-      (progn ;; remap for embedded keyboard
-	(setq mac-current-keyboard 'embedded)
-	(setq mac-option-modifier 'control)
-	(setq mac-command-modifier 'meta))))
-  (global-set-key (kbd "M-<f11>") 'toggle-frame-fullscreen))
+    (if (eq mac-current-keyboard 'usb)
+	(progn
+	  (setq mac-current-keyboard 'embeded)
+	  (setq mac-option-modifier 'control)
+	  (setq mac-command-modifier 'meta)
+	  (message "Remap to Embeded keyboard"))
+      (progn
+	(setq mac-current-keyboard 'usb)
+	(setq mac-option-modifier 'meta)
+	(setq mac-command-modifier 'super)
+	(message "Remap to USB keyboard"))))
+  (global-set-key (kbd "C-s-f") 'toggle-frame-fullscreen))
 
 ;;(yas-global-mode 1)
 (setq epa-file-select-keys nil)
@@ -147,6 +149,9 @@
 (use-package cmake-mode
   :commands cmake-mode
   :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'")) ;;add to auto-mode-alist
+
+(use-package restclient
+  :mode ("\\.restclient\\'" . restclient-mode))
 
 (use-package yasnippet
   :commands (yas-minor-mode yas-reload-all)
