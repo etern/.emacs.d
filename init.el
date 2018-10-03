@@ -46,23 +46,26 @@
   (setq gc-cons-percentage 0.5)
   (run-with-idle-timer 5 t #'garbage-collect)
   ;; (setq garbage-collection-messages t)
-  (setq w32-recognize-altgr nil))
+  (setq w32-recognize-altgr nil)
+  (require 'wget))
 
 (when (eq system-type 'darwin)
   (defvar mac-current-keyboard 'usb)
   (defun mac-toggle-keyboard ()
     (interactive)
     (if (eq mac-current-keyboard 'usb)
-	(progn
-	  (setq mac-current-keyboard 'embeded)
-	  (setq mac-option-modifier 'control)
-	  (setq mac-command-modifier 'meta)
-	  (message "Remap to Embeded keyboard"))
+        (progn
+          (setq mac-current-keyboard 'embeded)
+          (setq mac-option-modifier 'control)
+          (setq mac-command-modifier 'meta)
+          (message "Remap to Embeded keyboard"))
       (progn
-	(setq mac-current-keyboard 'usb)
-	(setq mac-option-modifier 'meta)
-	(setq mac-command-modifier 'super)
-	(message "Remap to USB keyboard"))))
+        1       (setq mac-current-keyboard 'usb)
+        (setq mac-option-modifier 'meta)
+        (setq mac-command-modifier 'super)
+        (message "Remap to USB keyboard"))))
+  ;; not lose focus when execute `plantuml.jar`
+  (setenv "JAVA_TOOL_OPTIONS" "-Djava.awt.headless=true")
   (global-set-key (kbd "C-s-f") 'toggle-frame-fullscreen))
 
 ;;(yas-global-mode 1)
@@ -115,7 +118,7 @@
                 (org-remove-inline-images)
                 (hide-mode-line-mode -1)
                 (menu-bar-mode 1))))
-
+  (use-package ob-plantuml)
   (when (display-graphic-p)
     (setq org-image-actual-width nil) ;; to show resized image
     (set-face-attribute 'org-table nil
@@ -160,8 +163,6 @@
   (add-hook 'org-mode-hook #'yas-minor-mode)
   :config
   (yas-reload-all))
-
-(require 'wget)
 
 (use-package imenu-list
   :bind (("C-<f8>" . imenu-list-smart-toggle)))
