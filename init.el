@@ -66,6 +66,8 @@
         (message "Remap to USB keyboard"))))
   ;; not lose focus when execute `plantuml.jar`
   (setenv "JAVA_TOOL_OPTIONS" "-Djava.awt.headless=true")
+  (setenv "PATH" (concat "/usr/local/bin" ":" (getenv "PATH")))
+  (setq exec-path (append exec-path '("/usr/local/bin")))
   (global-set-key (kbd "C-s-f") 'toggle-frame-fullscreen))
 
 ;;(yas-global-mode 1)
@@ -191,3 +193,12 @@
   :init (which-key-mode)
   :diminish which-key-mode)
 
+(use-package dumb-jump
+  :bind (("M-g o" . dumb-jump-go-other-window)
+         ("M-g j" . dumb-jump-go)
+	 ("M-g b" . dumb-jump-back)
+         ("M-g i" . dumb-jump-go-prompt)
+         ("M-g x" . dumb-jump-go-prefer-external)
+         ("M-g z" . dumb-jump-go-prefer-external-other-window))
+  :config (setq dumb-jump-selector 'ivy) ;; (setq dumb-jump-selector 'helm)
+  :ensure)
