@@ -29,7 +29,13 @@
 ;;(desktop-save-mode 1)
 (show-paren-mode)
 (blink-cursor-mode -1)
-(add-hook 'c-mode-common-hook (lambda () (abbrev-mode -1)))
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (abbrev-mode -1)
+            (global-set-key (kbd "<f7>") #'compile)))
+(add-hook 'python-mode-hook
+          (lambda ()
+            (setenv "IPY_TEST_SIMPLE_PROMPT" "1")))
 
 (when (display-graphic-p)
   (tool-bar-mode -1)
@@ -187,11 +193,6 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-<" . mc/mark-all-like-this)
          ("<mouse-2>" . mc/add-cursor-on-click)))
-
-(use-package which-key
-  :ensure t
-  :init (which-key-mode)
-  :diminish which-key-mode)
 
 (use-package dumb-jump
   :bind (("M-g o" . dumb-jump-go-other-window)
