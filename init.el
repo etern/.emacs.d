@@ -23,6 +23,8 @@
 (require 'diminish) ;; for use-package :diminish
 (setq use-package-verbose 1)
 
+(push "~/.emacs.d/lisp" load-path)
+
 (setq ring-bell-function 'ignore)
 (setq make-backup-files nil)
 (setq inhibit-startup-screen t)
@@ -89,7 +91,6 @@
             " \t\r\n,\"'"
             "."
             1))
-(push "~/.emacs.d/lisp" load-path)
 
 ;;(load "setup-org-knowledge-project.el")
 (load "my-functions.el")
@@ -147,7 +148,12 @@
   :bind ("C-x g" . magit-status))
 
 (use-package ivy
-  :init (ivy-mode 1)
+  :init
+  (ivy-mode 1)
+  (counsel-mode 1)
+  :config
+  (setq ivy-re-builders-alist
+      '((t . ivy--regex-fuzzy)))
   :diminish ivy-mode)
 
 (use-package semantic
