@@ -155,7 +155,7 @@
   :config
   (setq ivy-re-builders-alist
       '((t . ivy--regex-fuzzy)))
-  :diminish ivy-mode)
+  :diminish (ivy-mode counsel-mode))
 
 (use-package semantic
   :bind ("C-c , s" . semantic-ia-show-summary))
