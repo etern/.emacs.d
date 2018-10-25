@@ -148,6 +148,7 @@
   :bind ("C-x g" . magit-status))
 
 (use-package ivy
+  :ensure t
   :init
   (ivy-mode 1)
   (counsel-mode 1)
