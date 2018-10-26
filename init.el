@@ -37,6 +37,9 @@
             (global-set-key (kbd "<f7>") #'compile)))
 (add-hook 'python-mode-hook
           (lambda ()
+	    (global-set-key (kbd "<f7>") #'compile)
+	    (set (make-local-variable 'compile-command)
+                 (concat "python " buffer-file-name))
             (setenv "IPY_TEST_SIMPLE_PROMPT" "1")))
 
 (when (display-graphic-p)
@@ -152,9 +155,6 @@
   :init
   (ivy-mode 1)
   (counsel-mode 1)
-  :config
-  (setq ivy-re-builders-alist
-      '((t . ivy--regex-fuzzy)))
   :diminish (ivy-mode counsel-mode))
 
 (use-package semantic
