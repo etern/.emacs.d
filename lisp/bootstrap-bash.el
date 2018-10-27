@@ -25,6 +25,10 @@
 ;;; Code:
 
 (setq git-prompt-sh-url "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh")
+;; git completion 2.18 bug:  https://apple.stackexchange.com/a/328144/304525
+;; "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash"
+(setq git-completion-sh-url "https://raw.githubusercontent.com/git/git/v2.17.1/contrib/completion/git-completion.bash")
+
 
 (defun add-git-prompt ()
   (url-retrieve git-prompt-sh-url
@@ -41,6 +45,21 @@
     (save-buffer))
   )
 
+(defun has-git-completion ()
+  "TODO: NOT IMPLEMENTED"
+  nil)
+
+(defun add-git-completion ()
+  (unless (has-git-completion)
+    (url-retrieve git-completion-sh-url
+		  (lambda (status)
+		    (write-region (1+ url-http-end-of-headers) (point-max) "~/.git-completion.sh")
+		    (message "Save %s to ~/.git-completion.sh" git-completion-sh-url)))
+    (with-current-buffer (find-file "~/.bashrc")
+      (goto-char (point-max))
+      (insert "\n. ~/.git-completion.sh\n")
+      (save-buffer))))
+
 (defun tmux-config ()
   (with-current-buffer (find-file "~/.tmux.conf")
     (goto-char (point-max))
@@ -50,8 +69,9 @@
 
 (defun bootstrap-bash ()
   (interactive)
-  (add-git-prompt)
-  (tmux-config))
+  (when (y-or-n-p "init git prompt?") (add-git-prompt))
+  (when (y-or-n-p "init git completion?") (add-git-completion))
+  (when (y-or-n-p "init tmux config?") (tmux-config)))
 
 (provide 'bootstrap-bash)
 ;;; bootstrap-bash.el ends here
