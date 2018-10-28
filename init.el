@@ -62,6 +62,7 @@
 
 (when (eq system-type 'darwin)
   (defvar mac-current-keyboard 'usb)
+
   (defun mac-toggle-keyboard ()
     (interactive)
     (if (eq mac-current-keyboard 'usb)
@@ -71,14 +72,18 @@
           (setq mac-command-modifier 'meta)
           (message "Remap to Embeded keyboard"))
       (progn
-        1       (setq mac-current-keyboard 'usb)
+	(setq mac-current-keyboard 'usb)
         (setq mac-option-modifier 'meta)
         (setq mac-command-modifier 'super)
         (message "Remap to USB keyboard"))))
+
+  (use-package exec-path-from-shell
+    :ensure t
+    :init (exec-path-from-shell-initialize)
+    :config (exec-path-from-shell-copy-env "PS1"))
+
   ;; not lose focus when execute `plantuml.jar`
   (setenv "JAVA_TOOL_OPTIONS" "-Djava.awt.headless=true")
-  (setenv "PATH" (concat "/usr/local/bin" ":" (getenv "PATH")))
-  (setq exec-path (append exec-path '("/usr/local/bin")))
   (global-set-key (kbd "C-s-f") 'toggle-frame-fullscreen))
 
 ;;(yas-global-mode 1)
