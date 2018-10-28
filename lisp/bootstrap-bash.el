@@ -75,7 +75,7 @@
     (save-buffer)
     (kill-buffer (current-buffer))))
 
-(defun add-alias-if-not-exists (key value existing)
+(defun add-alias-if-not-exist (key value existing)
   (let ((matches-alias (lambda (haystack)
 			 (string-match (regexp-quote (concat "alias " key)) haystack)))
 	(val (if (string-prefix-p "'" value) value (concat "'" value "'"))))
@@ -89,9 +89,14 @@
 
 (defun add-aliases ()
   (let ((existing-aliases (split-string (shell-command-to-string "bash -lic alias") "\n")))
-    (add-alias-if-not-exists "la" "ls -A" existing-aliases)
-    (add-alias-if-not-exists "la" "l -CF" existing-aliases)
-    (add-alias-if-not-exists "cls" "printf \"\033c\"" existing-aliases)))
+    (add-alias-if-not-exist "la" "ls -A" existing-aliases)
+    (add-alias-if-not-exist "l" "ls -CF" existing-aliases)
+    (add-alias-if-not-exist "ll" "ls -lh" existing-aliases)
+    (add-alias-if-not-exist "rm" "rm -I" existing-aliases)
+    (add-alias-if-not-exist "mv" "mv -i" existing-aliases)
+    (add-alias-if-not-exist "cp" "cp -i" existing-aliases)
+    (add-alias-if-not-exist "rgrep" "grep -r" existing-aliases)
+    (add-alias-if-not-exist "cls" "printf \"\033c\"" existing-aliases)))
 
 (defun bootstrap-bash ()
   (interactive)
