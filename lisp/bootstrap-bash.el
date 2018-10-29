@@ -99,8 +99,9 @@
 
 (defun config-history ()
   (when (eq system-type 'darwin) (exec-path-from-shell-copy-env "HISTIGNORE"))
-  (let* ((ignores (split-string (getenv "HISTIGNORE") ":"))
-	 (orig-num (length ignores)))
+  (let* ((ignore-str (getenv "HISTIGNORE"))
+	 (ignores (if ignore-str (split-string ignore-str ":") nil))
+         (orig-num (length ignores)))
     (unless (seq-some (lambda (str) (string= str "ls")) ignores)
       (setq ignores (cons "ls" ignores)))
     (unless (seq-some (lambda (str) (string= str "fg")) ignores)
