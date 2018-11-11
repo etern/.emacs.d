@@ -148,19 +148,19 @@
 
 (use-package avy
   :ensure t
-  :bind ("M-g M-g" . avy-goto-line))
+  :bind (("M-g M-g" . avy-goto-line)
+	 ("M-g M-c" . avy-goto-char)))
 
 (use-package magit
   :init
   (setq magit-diff-use-overlays nil)
   :bind ("C-x g" . magit-status))
 
-(use-package ivy
+(use-package counsel
+  ;; counsel depends on swiper depends on ivy
   :ensure t
-  :init
-  (ivy-mode 1)
-  (counsel-mode 1)
-  :diminish (ivy-mode counsel-mode))
+  :init (counsel-mode 1)
+  :diminish (counsel-mode))
 
 (use-package semantic
   :bind ("C-c , s" . semantic-ia-show-summary))
