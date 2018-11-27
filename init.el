@@ -89,7 +89,7 @@
 ;;(yas-global-mode 1)
 (setq epa-file-select-keys nil)
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
-(setq scroll-conservatively 1000) ;; don't recenter point
+;;(setq scroll-conservatively 1000) ;; don't recenter point
 
 ;; Must set before (require 'org)
 (setq org-emphasis-regexp-components
@@ -159,8 +159,10 @@
 (use-package counsel
   ;; counsel depends on swiper depends on ivy
   :ensure t
-  :init (counsel-mode 1)
-  :diminish (counsel-mode))
+  :init
+  (counsel-mode 1)
+  (ivy-mode 1)
+  :diminish (counsel-mode ivy-mode))
 
 (use-package semantic
   :bind ("C-c , s" . semantic-ia-show-summary))

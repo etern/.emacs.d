@@ -90,7 +90,7 @@
   (let ((existing-aliases (split-string (shell-command-to-string "bash -lic alias") "\n")))
     (add-alias-if-not-exist "la" "ls -A" existing-aliases)
     (add-alias-if-not-exist "l" "ls -CF" existing-aliases)
-    (add-alias-if-not-exist "ll" "ls -lh" existing-aliases)
+    (add-alias-if-not-exist "ll" "ls -lh --time-style=long-iso" existing-aliases)
     (add-alias-if-not-exist "rm" "rm -I" existing-aliases)
     (add-alias-if-not-exist "mv" "mv -i" existing-aliases)
     (add-alias-if-not-exist "cp" "cp -i" existing-aliases)
