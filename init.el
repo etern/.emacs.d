@@ -40,6 +40,8 @@
 	    (global-set-key (kbd "<f7>") #'compile)
 	    (set (make-local-variable 'compile-command)
                  (concat "python " buffer-file-name))
+	    (when (functionp 'anaconda-mode) (anaconda-mode 1))
+	    (setenv "PYTHONIOENCODING" "utf-8")
             (setenv "IPY_TEST_SIMPLE_PROMPT" "1")))
 
 (when (display-graphic-p)
@@ -217,3 +219,12 @@
          ("M-g z" . dumb-jump-go-prefer-external-other-window))
   :config (setq dumb-jump-selector 'ivy) ;; (setq dumb-jump-selector 'helm)
   :ensure)
+
+(use-package dashboard
+    :ensure t
+    :diminish dashboard-mode
+    :config
+    (setq dashboard-banner-logo-title "hello world")
+    (setq dashboard-startup-banner nil)
+    (setq dashboard-items '((recents . 10)))
+    (dashboard-setup-startup-hook))
