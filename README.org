@@ -1,1 +1,21 @@
 * My EMACS configuration
+** Packages
+- org
+  - org-download
+  - *org-bullets*
+  - *org-present*
+    - *hide-mode-line*
+  - /ob-plantuml/
+- *avy*
+- magit
+- *counsel*
+- /semantic/
+- cmake-mode
+- restclient
+- yasnippet
+- imenu-list
+- *neotree*
+- *nyan-mode*
+- multiple-cursors
+- *dumb-jump*
+- *dashboard*
