@@ -31,6 +31,7 @@
 ;;(desktop-save-mode 1)
 (show-paren-mode)
 (blink-cursor-mode -1)
+(column-number-mode)
 (add-hook 'c-mode-common-hook
           (lambda ()
             (abbrev-mode -1)
