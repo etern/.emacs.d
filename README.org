@@ -1,9 +1,8 @@
 #+STARTUP: showall
-#+TITLE: Emacs Configuration
+#+TITLE: My Emacs Configuration
 #+OPTIONS: num:nil ^:{}
 
-* My EMACS configuration
-** Packages
+* Packages
 - org
   - org-download
   - *org-bullets*
@@ -13,7 +12,7 @@
 - *avy*
 - magit
 - *counsel*
-  - flx fuzzy match better sorting
+  - flx
 - /semantic/
 - cmake-mode
 - restclient
