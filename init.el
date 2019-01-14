@@ -165,6 +165,12 @@
   :init
   (counsel-mode 1)
   (ivy-mode 1)
+  :config
+  (use-package flx ;; fuzzy match better sorting
+    :ensure t)
+  (setq ivy-initial-inputs-alist nil)
+  (setq ivy-re-builders-alist
+      '((t . ivy--regex-fuzzy)))
   :diminish (counsel-mode ivy-mode))
 
 (use-package semantic
