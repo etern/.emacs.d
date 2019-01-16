@@ -234,4 +234,15 @@
     (setq dashboard-banner-logo-title "hello world")
     (setq dashboard-startup-banner nil)
     (setq dashboard-items '((recents . 10)))
+    (defun dashboard-insert-totd (list-size)
+      (let* ((commands (loop for s being the symbols
+			     when (commandp s) collect s))
+	     (command (nth (random (length commands)) commands)))
+	(insert
+	 (format "** Tip of the day: ** \nCommand: %s\n\n%s\n\nInvoke with:\n\n"
+		 (symbol-value 'command)
+		 (documentation command)))
+	(where-is command t)))
+    (add-to-list 'dashboard-item-generators '(totd . dashboard-insert-totd))
+    (add-to-list 'dashboard-items '(totd . 1) t)
     (dashboard-setup-startup-hook))

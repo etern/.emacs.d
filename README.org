@@ -12,7 +12,7 @@
 - *avy*
 - magit
 - *counsel*
-  - flx
+  - *flx*
 - /semantic/
 - cmake-mode
 - restclient
