@@ -23,3 +23,10 @@
 - multiple-cursors
 - *dumb-jump*
 - *dashboard*
+* Bindings
+- ~C-x |~ Toggle vertical/horizontal window split
+- ~C-c i~ imenu
+- ~C-<f8>~ Toggle imenu list
+- ~<f8>~ Toggle neotree
+- ~<f7>~ Compile (c/python)
+- ~C-x g~ Magit

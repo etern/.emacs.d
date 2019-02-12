@@ -87,6 +87,7 @@
 
   ;; not lose focus when execute `plantuml.jar`
   (setenv "JAVA_TOOL_OPTIONS" "-Djava.awt.headless=true")
+  (global-unset-key (kbd "s-x"))
   (global-set-key (kbd "C-s-f") 'toggle-frame-fullscreen))
 
 ;;(yas-global-mode 1)
@@ -228,21 +229,21 @@
   :ensure)
 
 (use-package dashboard
-    :ensure t
-    :diminish dashboard-mode
-    :config
-    (setq dashboard-banner-logo-title "hello world")
-    (setq dashboard-startup-banner nil)
-    (setq dashboard-items '((recents . 10)))
-    (defun dashboard-insert-totd (list-size)
-      (let* ((commands (loop for s being the symbols
-			     when (commandp s) collect s))
-	     (command (nth (random (length commands)) commands)))
-	(insert
-	 (format "** Tip of the day: ** \nCommand: %s\n\n%s\n\nInvoke with:\n\n"
-		 (symbol-value 'command)
-		 (documentation command)))
-	(where-is command t)))
-    (add-to-list 'dashboard-item-generators '(totd . dashboard-insert-totd))
-    (add-to-list 'dashboard-items '(totd . 1) t)
-    (dashboard-setup-startup-hook))
+  :ensure t
+  :diminish 'page-break-lines-mode
+  :config
+  (setq dashboard-banner-logo-title "hello world")
+  (setq dashboard-startup-banner nil)
+  (setq dashboard-items '((recents . 10)))
+  (defun dashboard-insert-totd (list-size)
+    (let* ((commands (loop for s being the symbols
+			   when (commandp s) collect s))
+	   (command (nth (random (length commands)) commands)))
+      (insert
+       (format "** Tip of the day: ** \nCommand: %s\n\n%s\n\nInvoke with:\n\n"
+	       (symbol-value 'command)
+	       (documentation command)))
+      (where-is command t)))
+  (add-to-list 'dashboard-item-generators '(totd . dashboard-insert-totd))
+  (add-to-list 'dashboard-items '(totd . 1) t)
+  (dashboard-setup-startup-hook))
