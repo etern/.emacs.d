@@ -23,6 +23,8 @@
 - multiple-cursors
 - *dumb-jump*
 - *dashboard*
+- pdf-tools
+- expand-region
 * Bindings
 - ~C-x |~ Toggle vertical/horizontal window split
 - ~C-c i~ imenu
@@ -30,3 +32,4 @@
 - ~<f8>~ Toggle neotree
 - ~<f7>~ Compile (c/python)
 - ~C-x g~ Magit
+- ~C-c =~ expand-region

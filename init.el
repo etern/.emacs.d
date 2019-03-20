@@ -247,3 +247,21 @@
   (add-to-list 'dashboard-item-generators '(totd . dashboard-insert-totd))
   (add-to-list 'dashboard-items '(totd . 1) t)
   (dashboard-setup-startup-hook))
+
+(use-package pdf-tools
+  :mode ("\\.pdf\\'" . pdf-view-mode))
+
+(use-package expand-region
+  :bind (("C-c =" . er/expand-region)))
+
+(defun hide-menu-on-fullscreen ()
+  (let ((fullscreen? (frame-parameter nil 'fullscreen)))
+    (if (memq fullscreen? '(fullscreen fullboth))
+	(menu-bar-mode -1)
+      (menu-bar-mode 1))))
+(advice-add #'toggle-frame-fullscreen :after #'hide-menu-on-fullscreen)
+
+(use-package which-key
+  :config
+  (which-key-mode)
+  (setq which-key-idle-delay 3.0))
