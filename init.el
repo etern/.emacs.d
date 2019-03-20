@@ -262,6 +262,7 @@
 (advice-add #'toggle-frame-fullscreen :after #'hide-menu-on-fullscreen)
 
 (use-package which-key
+  :diminish 'which-key-mode
   :config
   (which-key-mode)
   (setq which-key-idle-delay 3.0))
