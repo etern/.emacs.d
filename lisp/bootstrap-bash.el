@@ -91,11 +91,12 @@
                     ("cls" . "printf \"\033c\"")))
 	 (alias-names (mapcar #'car aliases)))
     (setq filtered (seq-filter (lambda (a) (not (seq-contains existing-aliases (car a)))) aliases))
-    (setq alias-lines (mapcar (lambda (elm) (concat (car elm) "='" (cdr elm) "'")) filtered))
+    (setq alias-lines (mapcar (lambda (elm) (concat "alias " (car elm) "='" (cdr elm) "'")) filtered))
     (bb--append-to-bashrc (mapconcat 'identity alias-lines "\n"))))
 
 (defun config-history ()
-  (exec-path-from-shell-copy-env "HISTIGNORE")
+  (when (boundp 'exec-path-from-shell-copy-env)
+    (exec-path-from-shell-copy-env "HISTIGNORE"))
   (let* ((ignore-str (getenv "HISTIGNORE"))
          (ignores (if ignore-str (split-string ignore-str ":") nil))
          (old-length (length ignores)))
@@ -108,7 +109,7 @@
 
 (defun bootstrap-bash ()
   (interactive)
-  (config-history)
+  (when (y-or-n-p "config history macro?") (config-history))
   (when (y-or-n-p "init git prompt?") (add-git-prompt))
   (when (y-or-n-p "init git completion?") (add-git-completion))
   (when (y-or-n-p "init alias?") (add-aliases))

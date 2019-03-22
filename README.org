@@ -25,6 +25,8 @@
 - *dashboard*
 - pdf-tools
 - expand-region
+- pyim
+
 * Bindings
 - ~C-x |~ Toggle vertical/horizontal window split
 - ~C-c i~ imenu

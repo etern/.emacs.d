@@ -142,6 +142,7 @@
   (use-package ob-plantuml)
   (when (display-graphic-p)
     (setq org-image-actual-width nil) ;; to show resized image
+    (plist-put org-format-latex-options :scale 1.5) ;; LaTeX preview
     (set-face-attribute 'org-table nil
                         :fontset (create-fontset-from-fontset-spec
                                   "-*-*-*-*-*--*-*-*-*-*-*-fontset-orgtable, han:宋体:size=18")))
@@ -266,3 +267,11 @@
   :config
   (which-key-mode)
   (setq which-key-idle-delay 3.0))
+
+(use-package pyim
+  :config
+  (use-package pyim-basedict
+    :config (pyim-basedict-enable))
+  (setq default-input-method "pyim")
+  (setq pyim-default-scheme 'quanpin)
+  (pyim-isearch-mode 1))
