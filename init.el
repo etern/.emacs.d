@@ -9,13 +9,10 @@
 (load custom-file)
 
 ;; Bootstrap `use-package`
-(setq package-pinned-packages
-      '((bind-key    . "melpa-stable")
-        (diminish    . "melpa-stable")
-        (use-package . "melpa-stable")))
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
-  (package-install 'use-package))
+  (package-install 'use-package)
+  (package-install 'diminish))
 
 (eval-when-compile
   (require 'use-package))
@@ -24,6 +21,7 @@
 (setq use-package-verbose 1)
 
 (push "~/.emacs.d/lisp" load-path)
+(set-language-environment "UTF-8")
 
 (setq ring-bell-function 'ignore)
 (setq make-backup-files nil)
@@ -263,12 +261,14 @@
 (advice-add #'toggle-frame-fullscreen :after #'hide-menu-on-fullscreen)
 
 (use-package which-key
+  :defer t
   :diminish 'which-key-mode
   :config
   (which-key-mode)
   (setq which-key-idle-delay 3.0))
 
 (use-package pyim
+  :defer t
   :config
   (use-package pyim-basedict
     :config (pyim-basedict-enable))
