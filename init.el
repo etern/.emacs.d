@@ -235,7 +235,7 @@
   (setq dashboard-startup-banner nil)
   (setq dashboard-items '((recents . 10)))
   (defun dashboard-insert-totd (list-size)
-    (let* ((commands (loop for s being the symbols
+    (let* ((commands (cl-loop for s being the symbols
 			   when (commandp s) collect s))
 	   (command (nth (random (length commands)) commands)))
       (insert
