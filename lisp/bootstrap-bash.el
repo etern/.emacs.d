@@ -79,18 +79,18 @@
 
 (defun tmux-config ()
   (bb--append-to-file "~/.tmux.conf"
-		      "# remap prefix from 'C-b' to 'backtick'"
-		      "unbind C-b"
-		      "set -g prefix `"
-		      "bind-key ` send-prefix"
-		      "# Start window numbering at 1"
-		      "set -g base-index 1"
-		      "set -g status-bg colour240"
-		      "# Current tab colour"
-		      "set-window-option -g window-status-current-bg colour250"
-		      "set-option -g status-position top"
-		      "set-option -g renumber-windows on"
-		      "set -g mouse on"))
+		      "# remap prefix from 'C-b' to 'backtick'\n"
+		      "unbind C-b\n"
+		      "set -g prefix `\n"
+		      "bind-key ` send-prefix\n"
+		      "# Start window numbering at 1\n"
+		      "set -g base-index 1\n"
+		      "set -g status-bg colour240\n"
+		      "# Current tab colour\n"
+		      "set-window-option -g window-status-current-bg colour250\n"
+		      "set-option -g status-position top\n"
+		      "set-option -g renumber-windows on\n"
+		      "set -g mouse on\n"))
 
 (defun add-aliases ()
   (let* ((existing-aliases (split-string (shell-command-to-string "bash -lic alias") "\n"))
