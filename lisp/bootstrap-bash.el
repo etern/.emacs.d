@@ -52,14 +52,16 @@
 
 (defun add-git-prompt ()
   (unless (has-git-prompt)
-    (url-retrieve git-prompt-sh-url
-                  (lambda (status)
-                    (write-region (1+ url-http-end-of-headers) (point-max)
-                                  "~/.git-prompt.sh" nil 0)))
-    (bb--append-to-bashrc
-     ". ~/.git-prompt.sh\n"
-     "export GIT_PS1_SHOWDIRTYSTATE=1\n"
-     "export PS1='\\u@\\h \\w$(__git_ps1 \" (%s)\")\\$ '\n")))
+    (let ((script "~/.git-prompt.sh"))
+      (unless (file-exists-p script)
+	(url-retrieve git-prompt-sh-url
+                      (lambda (status)
+			(write-region (1+ url-http-end-of-headers) (point-max)
+                                      script nil 0))))
+      (bb--append-to-bashrc
+       "source " script "\n"
+       "export GIT_PS1_SHOWDIRTYSTATE=1\n"
+       "export PS1='\\u@\\h \\w$(__git_ps1 \" (%s)\")\\$ '\n"))))
 
 (defun has-git-completion ()
   (let ((bash-completions (split-string (shell-command-to-string "bash -lic complete")))
@@ -68,13 +70,27 @@
 
 (defun add-git-completion ()
   (unless (has-git-completion)
+    (let ((script "~/.git-completion.sh"))
+      (unless (file-exists-p script)
     (url-retrieve git-completion-sh-url
                   (lambda (status)
-                    (write-region (1+ url-http-end-of-headers) (point-max) "~/.git-completion.sh" nil 0)))
-    (bb--append-to-bashrc ". ~/.git-completion.sh")))
+                    (write-region (1+ url-http-end-of-headers) (point-max) script nil 0))))
+    (bb--append-to-bashrc "source " script))))
 
 (defun tmux-config ()
-    (bb--append-to-file "~/.tmux.conf" "set-option -g default-command bash"))
+  (bb--append-to-file "~/.tmux.conf"
+		      "# remap prefix from 'C-b' to 'backtick'"
+		      "unbind C-b"
+		      "set -g prefix `"
+		      "bind-key ` send-prefix"
+		      "# Start window numbering at 1"
+		      "set -g base-index 1"
+		      "set -g status-bg colour240"
+		      "# Current tab colour"
+		      "set-window-option -g window-status-current-bg colour250"
+		      "set-option -g status-position top"
+		      "set-option -g renumber-windows on"
+		      "set -g mouse on"))
 
 (defun add-aliases ()
   (let* ((existing-aliases (split-string (shell-command-to-string "bash -lic alias") "\n"))
