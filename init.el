@@ -138,6 +138,12 @@
                 (hide-mode-line-mode -1)
                 (menu-bar-mode 1))))
   (use-package ob-plantuml)
+  (defun my/org-template ()
+    (insert "#+STARTUP: showall\n")
+    (insert "#+TITLE: ")
+    (insert (file-name-base (buffer-name)))
+    (insert "\n#+OPTIONS: num:nil ^:{}\n"))
+  (define-auto-insert "\\.org$" #'my/org-template)
   (when (display-graphic-p)
     (setq org-image-actual-width nil) ;; to show resized image
     (plist-put org-format-latex-options :scale 1.5) ;; LaTeX preview
