@@ -138,6 +138,11 @@
                 (hide-mode-line-mode -1)
                 (menu-bar-mode 1))))
   (use-package ob-plantuml)
+  (use-package ox-latex
+    :config
+    (setq org-latex-pdf-process '("xelatex -shell-escape %f"
+                                  "xelatex -shell-escape %f"
+                                  "xelatex -shell-escape %f")))
   (defun my/org-template ()
     (insert "#+STARTUP: showall\n")
     (insert "#+TITLE: ")

@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: latex
+# key: latex
+# --
+#+LATEX_HEADER: \usepackage{fontspec}
+#+LATEX_HEADER: \usepackage{indentfirst}
+#+LATEX_HEADER: \setmainfont{宋体}
+#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
