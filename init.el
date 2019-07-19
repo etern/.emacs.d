@@ -154,7 +154,7 @@
     (plist-put org-format-latex-options :scale 1.5) ;; LaTeX preview
     (set-face-attribute 'org-table nil
                         :fontset (create-fontset-from-fontset-spec
-                                  "-*-*-*-*-*--*-*-*-*-*-*-fontset-orgtable, han:宋体:size=18")))
+                                  "-*-*-*-*-*--*-*-*-*-*-*-fontset-orgtable, han:宋体:size=16")))
   ;;(setq org-refile-use-outline-path nil)
   :bind (("C-c l" . org-store-link)
          ("C-c a" . org-agenda))
@@ -197,14 +197,6 @@
 
 (use-package restclient
   :mode ("\\.restclient\\'" . restclient-mode))
-
-(use-package yasnippet
-  :commands (yas-minor-mode yas-reload-all)
-  :diminish yas-minor-mode
-  :init
-  (add-hook 'org-mode-hook #'yas-minor-mode)
-  :config
-  (yas-reload-all))
 
 (use-package imenu-list
   :bind (("C-<f8>" . imenu-list-smart-toggle)))
@@ -286,3 +278,11 @@
   (setq default-input-method "pyim")
   (setq pyim-default-scheme 'quanpin)
   (pyim-isearch-mode 1))
+
+(define-auto-insert 'org-mode '(nil "# -*- word-wrap: nil; -*-
+#+STARTUP: showall
+#+TITLE: `(file-name-base (buffer-name))`
+#+OPTIONS: num:nil ^:{}
+"))
+(auto-insert-mode 1)
+(setq auto-insert-query nil)

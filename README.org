@@ -16,7 +16,6 @@
 - /semantic/
 - cmake-mode
 - restclient
-- yasnippet
 - imenu-list
 - *neotree*
 - *nyan-mode*
