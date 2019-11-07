@@ -25,6 +25,7 @@
 - pdf-tools
 - expand-region
 - pyim
+- *which-key*
 
 * Bindings
 - ~C-x |~ Toggle vertical/horizontal window split

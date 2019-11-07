@@ -236,7 +236,7 @@
   :config
   (setq dashboard-banner-logo-title "hello world")
   (setq dashboard-startup-banner nil)
-  (setq dashboard-items '((recents . 10)))
+  (setq dashboard-items '((recents . 15)))
   (defun dashboard-insert-totd (list-size)
     (let* ((commands (cl-loop for s being the symbols
 			   when (commandp s) collect s))
@@ -264,11 +264,12 @@
 (advice-add #'toggle-frame-fullscreen :after #'hide-menu-on-fullscreen)
 
 (use-package which-key
-  :defer t
+  :ensure t
   :diminish 'which-key-mode
   :config
-  (which-key-mode)
-  (setq which-key-idle-delay 3.0))
+  (which-key-mode 1)
+  (setq which-key-idle-delay 3.0)
+  (setq which-key-idle-secondary-delay 0))
 
 (use-package pyim
   :defer t
@@ -278,11 +279,3 @@
   (setq default-input-method "pyim")
   (setq pyim-default-scheme 'quanpin)
   (pyim-isearch-mode 1))
-
-(define-auto-insert 'org-mode '(nil "# -*- word-wrap: nil; -*-
-#+STARTUP: showall
-#+TITLE: `(file-name-base (buffer-name))`
-#+OPTIONS: num:nil ^:{}
-"))
-(auto-insert-mode 1)
-(setq auto-insert-query nil)
