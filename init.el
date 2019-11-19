@@ -112,6 +112,7 @@
   :defer t
   :config
   (use-package org-download
+    :if (display-graphic-p)
     :init
     (setq org-download-image-dir "./org-download-images") ;; this dir will be auto-created
     :config
@@ -205,7 +206,8 @@
   :ensure t
   :bind (("<f8>" . neotree-toggle))
   :config
-  (use-package all-the-icons)
+  (use-package all-the-icons
+    :if (display-graphic-p))
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 (use-package nyan-mode
@@ -251,6 +253,7 @@
   (dashboard-setup-startup-hook))
 
 (use-package pdf-tools
+  :if (display-graphic-p)
   :mode ("\\.pdf\\'" . pdf-view-mode))
 
 (use-package expand-region
