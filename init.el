@@ -46,7 +46,7 @@
 (when (display-graphic-p)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
-  (set-frame-size (selected-frame) 115 35) ;; better: add "-geometry 115x35" to Windows shortcut
+  (set-frame-size (selected-frame) 1000 600 t) ;; better: add "-geometry 115x35" to Windows shortcut
   (set-fontset-font (frame-parameter nil 'font)
                     'han (font-spec :family "Microsoft Yahei"))
   (set-face-attribute 'mode-line nil :box nil) ;; flat mode line
@@ -254,7 +254,12 @@
 
 (use-package pdf-tools
   :if (display-graphic-p)
-  :mode ("\\.pdf\\'" . pdf-view-mode))
+  :mode ("\\.pdf\\'" . pdf-view-mode)
+  :config
+  (add-hook 'pdf-view-mode-hook
+	    (lambda ()
+	      (progn (pdf-isearch-minor-mode)
+		     (pdf-misc-context-menu-minor-mode)))))
 
 (use-package expand-region
   :bind (("C-c =" . er/expand-region)))
@@ -282,3 +287,10 @@
   (setq default-input-method "pyim")
   (setq pyim-default-scheme 'quanpin)
   (pyim-isearch-mode 1))
+
+(use-package hideshow
+  :diminish hs-minor-mode
+  :hook (prog-mode . hs-minor-mode))
+
+(use-package subword ;; camelCase
+  :hook (prog-mode . subword-mode))
