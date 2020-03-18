@@ -30,6 +30,7 @@
 (show-paren-mode)
 (blink-cursor-mode -1)
 (column-number-mode)
+(menu-bar-mode -1)
 (add-hook 'c-mode-common-hook
           (lambda ()
             (abbrev-mode -1)
@@ -47,6 +48,7 @@
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (set-frame-size (selected-frame) 1000 600 t) ;; better: add "-geometry 115x35" to Windows shortcut
+  (setq frame-title-format '(multiple-frames "%b" ""))
   (set-fontset-font (frame-parameter nil 'font)
                     'han (font-spec :family "Microsoft Yahei"))
   (set-face-attribute 'mode-line nil :box nil) ;; flat mode line
@@ -130,14 +132,12 @@
               (lambda ()
                 (org-present-big)
                 (org-display-inline-images)
-                (hide-mode-line-mode 1)
-                (menu-bar-mode -1)))
+                (hide-mode-line-mode 1)))
     (add-hook 'org-present-mode-quit-hook
               (lambda ()
                 (org-present-small)
                 (org-remove-inline-images)
-                (hide-mode-line-mode -1)
-                (menu-bar-mode 1))))
+                (hide-mode-line-mode -1))))
   (use-package ob-plantuml)
   (use-package ox-latex
     :config
@@ -252,6 +252,11 @@
   (add-to-list 'dashboard-items '(totd . 1) t)
   (dashboard-setup-startup-hook))
 
+(use-package recentf
+  :config
+  (add-to-list 'recentf-exclude "\\.emacs\\.d/recentf$")
+  (add-to-list 'recentf-exclude "\\.emacs\\.d/bookmarks$"))
+
 (use-package pdf-tools
   :if (display-graphic-p)
   :mode ("\\.pdf\\'" . pdf-view-mode)
@@ -263,13 +268,6 @@
 
 (use-package expand-region
   :bind (("C-c =" . er/expand-region)))
-
-(defun hide-menu-on-fullscreen ()
-  (let ((fullscreen? (frame-parameter nil 'fullscreen)))
-    (if (memq fullscreen? '(fullscreen fullboth))
-	(menu-bar-mode -1)
-      (menu-bar-mode 1))))
-(advice-add #'toggle-frame-fullscreen :after #'hide-menu-on-fullscreen)
 
 (use-package which-key
   :ensure t
