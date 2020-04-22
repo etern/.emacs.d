@@ -7,3 +7,15 @@ ido.last
 .mc-lists.el
 eshell/history
 eshell/lastdir
+auto-save-list/
+bookmarks
+recentf
+*.elc
+newsticker/
+custom.el
+mspyls/
+.dap-breakpoints
+.lsp-session*
+.org-id-locations
+pyim/
+transient/
