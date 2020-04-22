@@ -170,6 +170,10 @@
   :bind (("M-g M-g" . avy-goto-line)
 	 ("M-g M-c" . avy-goto-char)))
 
+(use-package ace-window
+  :ensure t
+  :bind ("M-o" . ace-window))
+
 (use-package magit
   :init
   (setq magit-diff-use-overlays nil)
