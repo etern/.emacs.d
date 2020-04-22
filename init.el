@@ -161,6 +161,10 @@
          ("C-c a" . org-agenda))
 )
 
+(define-auto-insert "\\.py$"
+  (lambda ()
+    (insert "#! /usr/bin/env python3\n# -*- coding:utf-8 -*-\n")))
+
 (use-package avy
   :ensure t
   :bind (("M-g M-g" . avy-goto-line)

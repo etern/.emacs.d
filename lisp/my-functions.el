@@ -48,6 +48,12 @@
 
 ;;; Code:
 
+(define-skeleton my/snippet-dir-locals
+  "Template of .dir-locals.el"
+  nil
+  "((nil . ((create-lockfiles . nil) ;; nil set variable for all mode
+         (eval . (message \"executed\")))) ;; `eval` pseudo-variable for evaluation
+ (c-mode . ((fill-column . 50))))")
 
 
 (provide 'my-functions)
