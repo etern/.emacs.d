@@ -177,6 +177,7 @@
 
 (use-package ace-window
   :ensure t
+  :custom (aw-scope 'frame)
   :bind ("M-o" . ace-window))
 
 (use-package magit
@@ -272,6 +273,9 @@
 (use-package pdf-tools
   :if (display-graphic-p)
   :mode ("\\.pdf\\'" . pdf-view-mode)
+  :bind (:map pdf-view-mode-map
+	      (("j" . pdf-view-next-line-or-next-page)
+	       ("k" . pdf-view-previous-line-or-previous-page)))
   :config
   (add-hook 'pdf-view-mode-hook
 	    (lambda ()
