@@ -110,7 +110,12 @@
 (global-set-key (kbd "C-x |") #'toggle-window-split)
 (global-set-key (kbd "C-c i") #'imenu)
 
+;; #auto-save-file# to /tmp
+(setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
+
 (use-package org
+  :init
+  (add-hook 'org-mode-hook (lambda () (require 'org-tempo)))
   :defer t
   :config
   (use-package org-download
@@ -248,8 +253,7 @@
   (setq dashboard-startup-banner nil)
   (setq dashboard-items '((recents . 15)))
   (defun dashboard-insert-totd (list-size)
-    (let* ((commands (cl-loop for s being the symbols
-			   when (commandp s) collect s))
+    (let* ((commands (seq-filter #'commandp obarray))
 	   (command (nth (random (length commands)) commands)))
       (insert
        (format "** Tip of the day: ** \nCommand: %s\n\n%s\n\nInvoke with:\n\n"
