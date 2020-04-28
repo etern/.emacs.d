@@ -280,6 +280,7 @@
   (add-hook 'pdf-view-mode-hook
 	    (lambda ()
 	      (progn (pdf-isearch-minor-mode)
+		     (pdf-annot-minor-mode)
 		     (pdf-misc-context-menu-minor-mode)))))
 
 (use-package expand-region
