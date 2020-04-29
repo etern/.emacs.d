@@ -273,9 +273,10 @@
 (use-package pdf-tools
   :if (display-graphic-p)
   :mode ("\\.pdf\\'" . pdf-view-mode)
-  :bind (:map pdf-view-mode-map
+  :bind (:map pdf-view-mode-map ;; `GNU less` flavor
 	      (("j" . pdf-view-next-line-or-next-page)
-	       ("k" . pdf-view-previous-line-or-previous-page)))
+	       ("k" . pdf-view-previous-line-or-previous-page)
+	       ("b" . pdf-view-scroll-down-or-previous-page)))
   :config
   (add-hook 'pdf-view-mode-hook
 	    (lambda ()
