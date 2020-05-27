@@ -153,7 +153,7 @@
     (insert "#+STARTUP: showall\n")
     (insert "#+TITLE: ")
     (insert (file-name-base (buffer-name)))
-    (insert "\n#+OPTIONS: num:nil ^:{}\n"))
+    (insert "\n#+OPTIONS: num:nil ^:{} toc:nil\n"))
   (define-auto-insert "\\.org$" #'my/org-template)
   (when (display-graphic-p)
     (setq org-image-actual-width nil) ;; to show resized image
