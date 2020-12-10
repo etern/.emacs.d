@@ -211,7 +211,8 @@
   :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'")) ;;add to auto-mode-alist
 
 (use-package restclient
-  :mode ("\\.restclient\\'" . restclient-mode))
+  :mode (("\\.rest\\'" . restclient-mode)
+	 ("\\.http\\'" . restclient-mode)))
 
 (use-package imenu-list
   :bind (("C-<f8>" . imenu-list-smart-toggle)))
