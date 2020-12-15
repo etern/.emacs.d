@@ -19,3 +19,4 @@ mspyls/
 .org-id-locations
 pyim/
 transient/
+.cache/

@@ -40,7 +40,6 @@
 	    (global-set-key (kbd "<f7>") #'compile)
 	    (set (make-local-variable 'compile-command)
                  (concat "python " buffer-file-name))
-	    (when (functionp 'anaconda-mode) (anaconda-mode 1))
 	    (setenv "PYTHONIOENCODING" "utf-8")
             (setenv "IPY_TEST_SIMPLE_PROMPT" "1")))
 
@@ -306,3 +305,26 @@
 
 (use-package subword ;; camelCase
   :hook (prog-mode . subword-mode))
+
+(use-package lsp-pyright
+  :defer t
+  :hook (python-mode . (lambda ()
+			 (if (require 'lsp-pyright nil 'noerror)
+			     (lsp)
+			   (message "lsp-pyright not installed, ignore")))))
+
+(use-package lsp-mode
+  :defer t
+  :diminish eldoc-mode
+  :config
+  (use-package flymake :diminish)
+  (use-package company :diminish)
+  (setq lsp-enable-snippet nil)
+  ;; diminish signature message in minibuffer
+  (setq lsp-signature-render-documentation nil)
+  (setq lsp-signature-auto-activate nil)
+  ;; Performance tuning
+  (setq gc-cons-threshold 100000000)
+  (setq read-process-output-max (* 1024 1024)) ;; 1mb
+  (setq lsp-completion-provider :capf)
+  (setq lsp-log-io nil))
