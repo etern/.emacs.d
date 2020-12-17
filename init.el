@@ -304,6 +304,7 @@
   :hook (prog-mode . hs-minor-mode))
 
 (use-package subword ;; camelCase
+  :diminish subword-mode
   :hook (prog-mode . subword-mode))
 
 (use-package lsp-pyright
