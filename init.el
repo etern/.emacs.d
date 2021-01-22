@@ -247,14 +247,14 @@
   :config
   (setq dashboard-banner-logo-title "hello world")
   (setq dashboard-startup-banner nil)
-  (setq dashboard-items '((recents . 15)))
+  (setq dashboard-items '((recents . 20)))
   (defun dashboard-insert-totd (list-size)
     (let* ((commands (seq-filter #'commandp obarray))
 	   (command (nth (random (length commands)) commands)))
-      (insert
-       (format "** Tip of the day: ** \nCommand: %s\n\n%s\n\nInvoke with:\n\n"
-	       (symbol-value 'command)
-	       (documentation command)))
+      (insert (propertize "Tip of the day:\n" 'face 'dashboard-heading))
+      (insert (format "Command: %s\n\n%s\n\nInvoke with:\n\n"
+		      (symbol-value 'command)
+		      (documentation command)))
       (where-is command t)))
   (add-to-list 'dashboard-item-generators '(totd . dashboard-insert-totd))
   (add-to-list 'dashboard-items '(totd . 1) t)
