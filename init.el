@@ -277,6 +277,7 @@
 	    (lambda ()
 	      (progn (pdf-isearch-minor-mode)
 		     (pdf-annot-minor-mode)
+		     (pdf-outline-minor-mode)
 		     (pdf-misc-context-menu-minor-mode)))))
 
 (use-package expand-region
@@ -329,3 +330,6 @@
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
   (setq lsp-completion-provider :capf)
   (setq lsp-log-io nil))
+
+(use-package project
+  :bind (("C-c p f" . project-find-file)))

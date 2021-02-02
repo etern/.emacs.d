@@ -27,6 +27,8 @@
 - expand-region
 - pyim
 - *which-key*
+- lsp-mode
+- lsp-pyright
 
 * Bindings
 - ~C-x |~ Toggle vertical/horizontal window split
@@ -36,3 +38,4 @@
 - ~<f7>~ Compile (c/python)
 - ~C-x g~ Magit
 - ~C-c =~ expand-region
+- ~C-c p f~ project-find-file
