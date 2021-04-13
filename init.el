@@ -37,6 +37,7 @@
             (global-set-key (kbd "<f7>") #'compile)))
 (add-hook 'python-mode-hook
           (lambda ()
+	    (setq tab-width 4)
 	    (global-set-key (kbd "<f7>") #'compile)
 	    (set (make-local-variable 'compile-command)
                  (concat "python " buffer-file-name))
@@ -108,6 +109,7 @@
 
 (global-set-key (kbd "C-x |") #'toggle-window-split)
 (global-set-key (kbd "C-c i") #'imenu)
+(global-set-key (kbd "C-x k") #'kill-this-buffer)
 
 ;; #auto-save-file# to /tmp
 (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
@@ -215,14 +217,6 @@
 
 (use-package imenu-list
   :bind (("C-<f8>" . imenu-list-smart-toggle)))
-
-(use-package neotree
-  :ensure t
-  :bind (("<f8>" . neotree-toggle))
-  :config
-  (use-package all-the-icons
-    :if (display-graphic-p))
-  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 (use-package nyan-mode
   :if window-system
@@ -333,3 +327,12 @@
 
 (use-package project
   :bind (("C-c p f" . project-find-file)))
+
+(use-package treemacs
+  :defer t
+  :bind (("C-c p p" . treemacs-select-window)
+	 ("<f8>" . treemacs)
+	 :map treemacs-mode-map
+	 ("j" . treemacs-next-line)
+	 ("k" . treemacs-previous-line)))
+
