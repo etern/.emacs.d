@@ -56,5 +56,32 @@
  (c-mode . ((fill-column . 50))))")
 
 
+(defun decode-utf8-string (str)
+  (decode-coding-string
+   (apply 'concat
+	  (mapcar (lambda (x) (unibyte-string x))
+		  (seq-into str 'list))) 'utf-8))
+
+(defun get-poem-then-update (&optional new-line)
+  "Schedule async download poem, read poem from cache file and
+return poem string"
+  (let ((poem-cache-file "~/.emacs.d/.poem.txt")
+	(url-request-extra-headers
+	 '(("X-User-Token" . "4xXGMG62BsykCCHWmj7ik4y2Z9bkiJ3T"))))
+    (ignore-errors
+      (url-retrieve
+       "https://v2.jinrishici.com/sentence"
+       (lambda (status) ;; Schedule async download
+	 (goto-char url-http-end-of-headers)
+	 (let* ((data (alist-get 'data (json-read)))
+		(content (alist-get 'content data)))
+	   (with-temp-file poem-cache-file
+	     (insert (decode-utf8-string content))
+	     (when new-line
+	       (insert "\n"))))))
+      (with-temp-buffer ;; read cache immediately
+	(insert-file-contents poem-cache-file)
+	(buffer-string)))))
+
 (provide 'my-functions)
 ;;; my-functions.el ends here

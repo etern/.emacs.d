@@ -239,8 +239,10 @@
   :ensure t
   :diminish 'page-break-lines-mode
   :config
-  (setq dashboard-banner-logo-title "hello world")
-  (setq dashboard-startup-banner nil)
+  (if (display-graphic-p)
+      (progn (get-poem-then-update t)
+	     (setq dashboard-startup-banner "~/.emacs.d/.poem.txt"))
+    (setq dashboard-startup-banner nil))
   (setq dashboard-items '((recents . 20)))
   (defun dashboard-insert-totd (list-size)
     (let* ((commands (seq-filter #'commandp obarray))
