@@ -55,12 +55,9 @@
          (eval . (message \"executed\")))) ;; `eval` pseudo-variable for evaluation
  (c-mode . ((fill-column . 50))))")
 
-
 (defun decode-utf8-string (str)
   (decode-coding-string
-   (apply 'concat
-	  (mapcar (lambda (x) (unibyte-string x))
-		  (seq-into str 'list))) 'utf-8))
+   (mapconcat #'unibyte-string (seq-into str 'list) "") 'utf-8))
 
 (defun get-poem-then-update (&optional new-line)
   "Schedule async download poem, read poem from cache file and
