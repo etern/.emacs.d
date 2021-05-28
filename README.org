@@ -29,6 +29,7 @@
 - lsp-mode
 - lsp-pyright
 - treemacs
+- org-roam
 
 * Bindings
 - ~C-x |~ Toggle vertical/horizontal window split
@@ -40,3 +41,6 @@
 - ~C-c p f~ project-find-file
 - ~C-c p p~ treemacs-select-window
 - ~<f8>~ treemacs
+
+* customize-variable
+- org-roam-directory

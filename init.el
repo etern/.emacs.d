@@ -338,3 +338,10 @@
 	 ("j" . treemacs-next-line)
 	 ("k" . treemacs-previous-line)))
 
+(use-package org-roam
+  :bind (("C-c n f" . org-roam-find-file) ; find file triggers org-roam-mode
+	 :map org-roam-mode-map
+         (("C-c n l" . org-roam)
+          ("C-c n g" . org-roam-graph))
+         :map org-mode-map
+         ("C-c n i" . org-roam-insert)))
