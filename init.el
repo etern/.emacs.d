@@ -61,6 +61,9 @@
   (run-with-idle-timer 5 t #'garbage-collect)
   ;; (setq garbage-collection-messages t)
   (setq w32-recognize-altgr nil)
+  (add-to-list 'process-coding-system-alist '("rg" utf-8 . gbk) t)
+  (add-to-list 'process-coding-system-alist '("git" utf-8 . gbk) t)
+  (add-to-list 'process-coding-system-alist '("" gbk . gbk) t)
   (require 'wget))
 
 (when (eq system-type 'darwin)
