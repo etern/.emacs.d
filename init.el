@@ -318,6 +318,8 @@
 
 (use-package lsp-mode
   :defer t
+  :init
+  (setq lsp-keymap-prefix "C-c p")
   :diminish eldoc-mode
   :config
   (use-package flymake :diminish)
