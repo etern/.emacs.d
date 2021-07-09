@@ -244,7 +244,9 @@
   :config
   (if (display-graphic-p)
       (progn (get-poem-then-update t)
-	     (setq dashboard-startup-banner "~/.emacs.d/.poem.txt"))
+	     (setq dashboard-startup-banner "~/.emacs.d/.poem.txt")
+	     (advice-add #'dashboard-refresh-buffer :after
+			 (lambda () (get-poem-then-update t))))
     (setq dashboard-startup-banner nil))
   (setq dashboard-items '((recents . 20)))
   (defun dashboard-insert-totd (list-size)

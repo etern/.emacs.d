@@ -57,7 +57,7 @@
 
 (defun decode-utf8-string (str)
   (decode-coding-string
-   (mapconcat #'unibyte-string (seq-into str 'list) "") 'utf-8))
+   (mapconcat #'unibyte-string str "") 'utf-8))
 
 (defun get-poem-then-update (&optional new-line)
   "Schedule async download poem, read poem from cache file and
