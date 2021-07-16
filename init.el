@@ -194,9 +194,12 @@
   :custom
   (completion-styles '(basic substring partial-completion flex))
   (completion-ignore-case t)
+  (read-file-name-completion-ignore-case t)
+  (read-buffer-completion-ignore-case t)
   :config
-  ; https://github.com/minad/vertico/issues/10
-  (defvar minibuffer--require-match nil)
+  ;; https://github.com/minad/vertico/issues/10
+  (unless (boundp 'minibuffer--require-match)
+    (defvar minibuffer--require-match nil))
   (use-package marginalia
     :defer t
     :config (marginalia-mode))
