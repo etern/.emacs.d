@@ -111,7 +111,6 @@
 (load "my-functions.el")
 
 (global-set-key (kbd "C-x |") #'toggle-window-split)
-(global-set-key (kbd "C-c i") #'imenu)
 (global-set-key (kbd "C-x k") #'kill-this-buffer)
 
 ;; #auto-save-file# to /tmp
@@ -189,19 +188,35 @@
   (setq magit-diff-use-overlays nil)
   :bind ("C-x g" . magit-status))
 
-(use-package counsel
-  ;; counsel depends on swiper depends on ivy
+(use-package vertico
   :ensure t
-  :init
-  (counsel-mode 1)
-  (ivy-mode 1)
+  :init (vertico-mode)
+  :custom
+  (completion-styles '(basic substring partial-completion flex))
+  (completion-ignore-case t)
   :config
-  (use-package flx ;; fuzzy match better sorting
-    :ensure t)
-  (setq ivy-initial-inputs-alist nil)
-  (setq ivy-re-builders-alist
-      '((t . ivy--regex-fuzzy)))
-  :diminish (counsel-mode ivy-mode))
+  ; https://github.com/minad/vertico/issues/10
+  (defvar minibuffer--require-match nil)
+  (use-package marginalia
+    :defer t
+    :config (marginalia-mode))
+  (require 'marginalia nil 'noerror))
+
+(use-package consult
+  :ensure t
+  :bind
+  (("C-x b" . consult-buffer)
+   ("M-y" . consult-yank-pop)
+   ("M-g i" . consult-imenu)
+   ("M-s o" . consult-line)
+   ("M-s g" . consult-git-grep)
+   ("M-s r" . consult-ripgrep))
+  :config
+  (consult-customize
+   consult-ripgrep
+   consult--source-file consult--source-project-file
+   consult--source-bookmark
+   :preview-key (kbd "M-.")))
 
 (use-package semantic
   :bind ("C-c , s" . semantic-ia-show-summary))
@@ -289,6 +304,7 @@
   :diminish 'which-key-mode
   :config
   (which-key-mode 1)
+  (setq which-key-show-early-on-C-h t)
   (setq which-key-idle-delay 3.0)
   (setq which-key-idle-secondary-delay 0))
 

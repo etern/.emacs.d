@@ -12,8 +12,9 @@
 - *avy*
 - *ace-window*
 - magit
-- *counsel*
-  - *flx*
+- *vertico*
+  - marginalia
+- *consult*
 - /semantic/
 - cmake-mode
 - restclient
@@ -33,7 +34,9 @@
 
 * Bindings
 - ~C-x |~ Toggle vertical/horizontal window split
-- ~C-c i~ imenu
+- ~M-g i~ consult-imenu
+- ~M-s r~ consult-ripgrep
+- ~M-s g~ consult-git-grep
 - ~C-<f8>~ Toggle imenu list
 - ~<f7>~ Compile (c/python)
 - ~C-x g~ Magit
