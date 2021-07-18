@@ -342,7 +342,6 @@
   :diminish eldoc-mode
   :config
   (use-package flymake :diminish)
-  (use-package company :diminish)
   (setq lsp-enable-snippet nil)
   ;; diminish signature message in minibuffer
   (setq lsp-signature-render-documentation nil)
@@ -352,6 +351,15 @@
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
   (setq lsp-completion-provider :capf)
   (setq lsp-log-io nil))
+
+(use-package company
+  :ensure t
+  :diminish
+  :bind (:map company-mode-map
+	      ([remap completion-at-point] . company-complete))
+  :hook ((prog-mode . company-mode)
+         (shell-mode . company-mode)
+         (eshell-mode . company-mode)))
 
 (use-package project
   :bind (("C-c p f" . project-find-file)))
