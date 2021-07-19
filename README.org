@@ -29,12 +29,14 @@
 - *which-key*
 - lsp-mode
 - lsp-pyright
+- *company*
 - treemacs
 - org-roam
 
 * Bindings
 - ~C-x |~ Toggle vertical/horizontal window split
 - ~M-g i~ consult-imenu
+- ~M-g f~ consult-flymake (prog-mode)
 - ~M-s r~ consult-ripgrep
 - ~M-s g~ consult-git-grep
 - ~C-<f8>~ Toggle imenu list
@@ -44,6 +46,7 @@
 - ~C-c p f~ project-find-file
 - ~C-c p p~ treemacs-select-window
 - ~<f8>~ treemacs
+- ~C-M-i~ company-complete
 
 * customize-variable
 - org-roam-directory

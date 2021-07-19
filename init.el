@@ -121,6 +121,7 @@
   (add-hook 'org-mode-hook (lambda () (require 'org-tempo)))
   :defer t
   :config
+  (electric-indent-mode -1)
   (use-package org-download
     :if (display-graphic-p)
     :init
@@ -213,7 +214,9 @@
    ("M-g i" . consult-imenu)
    ("M-s o" . consult-line)
    ("M-s g" . consult-git-grep)
-   ("M-s r" . consult-ripgrep))
+   ("M-s r" . consult-ripgrep)
+   :map prog-mode-map
+   ("M-g f" . consult-flymake))
   :config
   (consult-customize
    consult-ripgrep
