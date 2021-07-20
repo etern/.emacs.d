@@ -222,7 +222,11 @@
    consult-ripgrep
    consult--source-file consult--source-project-file
    consult--source-bookmark
-   :preview-key (kbd "M-.")))
+   :preview-key (kbd "M-."))
+  (setq consult-project-root-function
+        (lambda ()
+          (when-let (project (project-current))
+            (car (project-roots project))))))
 
 (use-package semantic
   :bind ("C-c , s" . semantic-ia-show-summary))
