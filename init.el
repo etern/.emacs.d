@@ -37,11 +37,11 @@
             (global-set-key (kbd "<f7>") #'compile)))
 (add-hook 'python-mode-hook
           (lambda ()
-	    (setq tab-width 4)
-	    (global-set-key (kbd "<f7>") #'compile)
-	    (set (make-local-variable 'compile-command)
+            (setq tab-width 4)
+            (global-set-key (kbd "<f7>") #'compile)
+            (set (make-local-variable 'compile-command)
                  (concat "python " buffer-file-name))
-	    (setenv "PYTHONIOENCODING" "utf-8")
+            (setenv "PYTHONIOENCODING" "utf-8")
             (setenv "IPY_TEST_SIMPLE_PROMPT" "1")))
 
 (when (display-graphic-p)
@@ -78,7 +78,7 @@
           (setq mac-command-modifier 'meta)
           (message "Remap to Embeded keyboard"))
       (progn
-	(setq mac-current-keyboard 'usb)
+        (setq mac-current-keyboard 'usb)
         (setq mac-option-modifier 'meta)
         (setq mac-command-modifier 'super)
         (message "Remap to USB keyboard"))))
@@ -169,8 +169,9 @@
                         :fontset (create-fontset-from-fontset-spec
                                   "-*-*-*-*-*--*-*-*-*-*-*-fontset-orgtable, han:宋体:size=16")))
   ;;(setq org-refile-use-outline-path nil)
-  :bind (("C-c l" . org-store-link)
-         ("C-c a" . org-agenda))
+  :bind (("C-c a" . org-agenda)
+         :map org-mode-map
+         ("C-c l" . org-store-link))
 )
 
 (define-auto-insert "\\.py$"
@@ -180,7 +181,7 @@
 (use-package avy
   :ensure t
   :bind (("M-g M-g" . avy-goto-line)
-	 ("M-g M-c" . avy-goto-char)))
+         ("M-g M-c" . avy-goto-char)))
 
 (use-package ace-window
   :ensure t
@@ -245,10 +246,10 @@
 
 (use-package restclient
   :mode (("\\.rest\\'" . restclient-mode)
-	 ("\\.http\\'" . restclient-mode)))
+         ("\\.http\\'" . restclient-mode)))
 
 (use-package imenu-list
-  :bind (("C-<f8>" . imenu-list-smart-toggle)))
+  :bind ("C-<f8>" . imenu-list-smart-toggle))
 
 (use-package nyan-mode
   :if window-system
@@ -273,18 +274,18 @@
   :config
   (if (display-graphic-p)
       (progn (get-poem-then-update t)
-	     (setq dashboard-startup-banner "~/.emacs.d/.poem.txt")
-	     (advice-add #'dashboard-refresh-buffer :after
-			 (lambda () (get-poem-then-update t))))
+             (setq dashboard-startup-banner "~/.emacs.d/.poem.txt")
+             (advice-add #'dashboard-refresh-buffer :after
+                         (lambda () (get-poem-then-update t))))
     (setq dashboard-startup-banner nil))
   (setq dashboard-items '((recents . 20)))
   (defun dashboard-insert-totd (list-size)
     (let* ((commands (seq-filter #'commandp obarray))
-	   (command (nth (random (length commands)) commands)))
+           (command (nth (random (length commands)) commands)))
       (insert (propertize "Tip of the day:\n" 'face 'dashboard-heading))
       (insert (format "Command: %s\n\n%s\n\nInvoke with:\n\n"
-		      (symbol-value 'command)
-		      (documentation command)))
+                      (symbol-value 'command)
+                      (documentation command)))
       (where-is command t)))
   (add-to-list 'dashboard-item-generators '(totd . dashboard-insert-totd))
   (add-to-list 'dashboard-items '(totd . 1) t)
@@ -299,19 +300,19 @@
   :if (display-graphic-p)
   :mode ("\\.pdf\\'" . pdf-view-mode)
   :bind (:map pdf-view-mode-map ;; `GNU less` flavor
-	      (("j" . pdf-view-next-line-or-next-page)
-	       ("k" . pdf-view-previous-line-or-previous-page)
-	       ("b" . pdf-view-scroll-down-or-previous-page)))
+              ("j" . pdf-view-next-line-or-next-page)
+              ("k" . pdf-view-previous-line-or-previous-page)
+              ("b" . pdf-view-scroll-down-or-previous-page))
   :config
   (add-hook 'pdf-view-mode-hook
-	    (lambda ()
-	      (progn (pdf-isearch-minor-mode)
-		     (pdf-annot-minor-mode)
-		     (pdf-outline-minor-mode)
-		     (pdf-misc-context-menu-minor-mode)))))
+            (lambda ()
+              (progn (pdf-isearch-minor-mode)
+                     (pdf-annot-minor-mode)
+                     (pdf-outline-minor-mode)
+                     (pdf-misc-context-menu-minor-mode)))))
 
 (use-package expand-region
-  :bind (("C-c =" . er/expand-region)))
+  :bind ("C-c =" . er/expand-region))
 
 (use-package which-key
   :ensure t
@@ -342,9 +343,9 @@
 (use-package lsp-pyright
   :defer t
   :hook (python-mode . (lambda ()
-			 (if (require 'lsp-pyright nil 'noerror)
-			     (lsp)
-			   (message "lsp-pyright not installed, ignore")))))
+                         (if (require 'lsp-pyright nil 'noerror)
+                             (lsp)
+                           (message "lsp-pyright not installed, ignore")))))
 
 (use-package lsp-mode
   :defer t
@@ -367,22 +368,22 @@
   :ensure t
   :diminish
   :bind (:map company-mode-map
-	      ([remap completion-at-point] . company-complete))
+              ([remap completion-at-point] . company-complete))
   :hook ((prog-mode . company-mode)
          (shell-mode . company-mode)
-	 (inferior-python-mode . company-mode)
+         (inferior-python-mode . company-mode)
          (eshell-mode . company-mode)))
 
 (use-package project
-  :bind (("C-c p f" . project-find-file)))
+  :bind ("C-c p f" . project-find-file))
 
 (use-package treemacs
   :defer t
   :bind (("C-c p p" . treemacs-select-window)
-	 ("<f8>" . treemacs)
-	 :map treemacs-mode-map
-	 ("j" . treemacs-next-line)
-	 ("k" . treemacs-previous-line)))
+         ("<f8>" . treemacs)
+         :map treemacs-mode-map
+         ("j" . treemacs-next-line)
+         ("k" . treemacs-previous-line)))
 
 (use-package org-roam
   :init
@@ -391,7 +392,7 @@
   (org-roam-graph-link-hidden-types '("http" "https" "info" "help"))
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
-	 ("C-c n g" . org-roam-graph)
+         ("C-c n g" . org-roam-graph)
          ("C-c n i" . org-roam-node-insert))
   :config
   (org-roam-setup))
