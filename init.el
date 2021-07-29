@@ -118,10 +118,13 @@
 
 (use-package org
   :init
-  (add-hook 'org-mode-hook (lambda () (require 'org-tempo)))
-  :defer t
+  :hook (org-mode . (lambda () (set-fill-column 80)))
   :config
+  (require 'org-tempo) ;; use `<s` to expand src_block
   (electric-indent-mode -1)
+  (use-package display-fill-column-indicator
+    :if (not (version< emacs-version "27"))
+    :hook (org-mode . display-fill-column-indicator-mode))
   (use-package org-download
     :if (display-graphic-p)
     :init
@@ -193,11 +196,12 @@
   :ensure t
   :init (vertico-mode)
   :custom
-  (completion-styles '(basic substring partial-completion flex))
+  (completion-styles '(substring flex))
   (completion-ignore-case t)
   (read-file-name-completion-ignore-case t)
   (read-buffer-completion-ignore-case t)
   :config
+  (setq completion-in-region-function #'consult-completion-in-region)
   ;; https://github.com/minad/vertico/issues/10
   (unless (boundp 'minibuffer--require-match)
     (defvar minibuffer--require-match nil))
@@ -366,6 +370,7 @@
 	      ([remap completion-at-point] . company-complete))
   :hook ((prog-mode . company-mode)
          (shell-mode . company-mode)
+	 (inferior-python-mode . company-mode)
          (eshell-mode . company-mode)))
 
 (use-package project
