@@ -217,7 +217,7 @@
   (("C-x b" . consult-buffer)
    ("M-y" . consult-yank-pop)
    ("M-g i" . consult-imenu)
-   ("M-s o" . consult-line)
+   ("M-s o" . consult-line-symbol-at-point)
    ("M-s g" . consult-git-grep)
    ("M-s r" . consult-ripgrep)
    :map prog-mode-map
@@ -231,7 +231,10 @@
   (setq consult-project-root-function
         (lambda ()
           (when-let (project (project-current))
-            (car (project-roots project))))))
+            (car (project-roots project)))))
+  (defun consult-line-symbol-at-point ()
+    (interactive)
+    (consult-line (thing-at-point 'symbol))))
 
 (use-package semantic
   :bind ("C-c , s" . semantic-ia-show-summary))
