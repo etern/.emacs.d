@@ -26,10 +26,10 @@
 
 (require 'seq)
 
-(setq git-prompt-sh-url "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh")
+(setq git-prompt-sh-url "https://gitee.com/mirrors/git/raw/v2.17.1/contrib/completion/git-prompt.sh")
 ;; git completion 2.18 bug:  https://apple.stackexchange.com/a/328144/304525
 ;; "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash"
-(setq git-completion-sh-url "https://raw.githubusercontent.com/git/git/v2.17.1/contrib/completion/git-completion.bash")
+(setq git-completion-sh-url "https://gitee.com/mirrors/git/raw/v2.17.1/contrib/completion/git-completion.bash")
 
 (defun bb--append-to-file (filename &rest contents)
   (let ((text (apply #'concat contents)))

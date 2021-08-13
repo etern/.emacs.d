@@ -59,11 +59,12 @@
   (decode-coding-string
    (mapconcat #'unibyte-string str "") 'utf-8))
 
+(defvar poem-cache-file "~/.emacs.d/.poem.txt")
+
 (defun get-poem-then-update (&optional new-line)
   "Schedule async download poem, read poem from cache file and
 return poem string"
-  (let ((poem-cache-file "~/.emacs.d/.poem.txt")
-	(url-request-extra-headers
+  (let ((url-request-extra-headers
 	 '(("X-User-Token" . "4xXGMG62BsykCCHWmj7ik4y2Z9bkiJ3T"))))
     (ignore-errors
       (url-retrieve
@@ -79,6 +80,13 @@ return poem string"
       (with-temp-buffer ;; read cache immediately
 	(insert-file-contents poem-cache-file)
 	(buffer-string)))))
+
+(defun get-poem ()
+  "Get poem from cache file"
+  (ignore-errors
+    (with-temp-buffer ;; read cache immediately
+      (insert-file-contents poem-cache-file)
+      (buffer-string))))
 
 (provide 'my-functions)
 ;;; my-functions.el ends here

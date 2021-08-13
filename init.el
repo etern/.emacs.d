@@ -48,7 +48,7 @@
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (set-frame-size (selected-frame) 1000 600 t) ;; better: add "-geometry 115x35" to Windows shortcut
-  (setq frame-title-format '(multiple-frames "%b" ""))
+  (setq frame-title-format '(multiple-frames "%e" (:eval (get-poem))))
   (set-fontset-font (frame-parameter nil 'font)
                     'han (font-spec :family "Microsoft Yahei"))
   (set-face-attribute 'mode-line nil :box nil) ;; flat mode line
