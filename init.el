@@ -399,3 +399,24 @@
          ("C-c n i" . org-roam-node-insert))
   :config
   (org-roam-setup))
+
+(use-package dired-x
+  :custom
+  (dired-dwim-target t))
+
+(use-package helpful
+  :if (require 'helpful nil 'noerror)
+  :bind (("C-h f" . helpful-callable)
+	 ("C-h v" . helpful-variable)
+	 ("C-h k" . helpful-key))
+  :config
+  (use-package elisp-demos
+    :if (require 'elisp-demos nil 'noerror)
+    :init
+    (advice-add 'helpful-update
+		:after #'elisp-demos-advice-helpful-update)))
+
+;; Since vertico is there, ido/icomplete will not be used intentionally
+;; In case they're loaded indirectly (ex: by lsp), use \n as separator
+(use-package ido :defer t :config (setf (nth 2 ido-decorations) "\n"))
+(use-package icomplete :defer t :custom (icomplete-separator "\n"))
