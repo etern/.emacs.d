@@ -31,6 +31,7 @@
 (blink-cursor-mode -1)
 (column-number-mode)
 (menu-bar-mode -1)
+(global-hl-line-mode)
 (add-hook 'c-mode-common-hook
           (lambda ()
             (abbrev-mode -1)
@@ -118,10 +119,10 @@
 
 (use-package org
   :init
-  :hook (org-mode . (lambda () (set-fill-column 80)))
+  :hook (org-mode . (lambda () (set-fill-column 80)
+		      (electric-indent-local-mode -1)))
   :config
   (require 'org-tempo) ;; use `<s` to expand src_block
-  (electric-indent-mode -1)
   (use-package display-fill-column-indicator
     :if (not (version< emacs-version "27"))
     :hook (org-mode . display-fill-column-indicator-mode))
