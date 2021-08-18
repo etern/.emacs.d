@@ -237,6 +237,18 @@
     (interactive)
     (consult-line (thing-at-point 'symbol))))
 
+(use-package embark
+  :bind
+  (("C-." . embark-act)         ;; pick some comfortable binding
+   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   :map embark-buffer-map
+   ("C-k" . kill-buffer)) ;; so both k & C-k works
+  :config
+  (setq embark-quit-after-action nil)
+  (delete #'kill-buffer embark-allow-edit-actions)
+  (use-package embark-consult
+    :after (embark consult)))
+
 (use-package semantic
   :bind ("C-c , s" . semantic-ia-show-summary))
 

@@ -15,6 +15,7 @@
 - *vertico*
   - marginalia
 - *consult*
+- embark
 - /semantic/
 - cmake-mode
 - restclient
@@ -47,6 +48,7 @@
 - ~C-c p p~ treemacs-select-window
 - ~<f8>~ treemacs
 - ~C-M-i~ company-complete
+- ~C-.~ embark-act
 
 * customize-variable
 - org-roam-directory
