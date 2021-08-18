@@ -31,7 +31,9 @@
 (blink-cursor-mode -1)
 (column-number-mode)
 (menu-bar-mode -1)
-(global-hl-line-mode)
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (setq indent-tabs-mode nil)))
 (add-hook 'c-mode-common-hook
           (lambda ()
             (abbrev-mode -1)
@@ -120,7 +122,7 @@
 (use-package org
   :init
   :hook (org-mode . (lambda () (set-fill-column 80)
-		      (electric-indent-local-mode -1)))
+                      (electric-indent-local-mode -1)))
   :config
   (require 'org-tempo) ;; use `<s` to expand src_block
   (use-package display-fill-column-indicator
@@ -356,6 +358,10 @@
   :diminish subword-mode
   :hook (prog-mode . subword-mode))
 
+(use-package hl-line
+  :hook ((prog-mode . hl-line-mode)
+         (dired-mode . hl-line-mode)))
+
 (use-package lsp-pyright
   :defer t
   :hook (python-mode . (lambda ()
@@ -420,14 +426,14 @@
 (use-package helpful
   :if (require 'helpful nil 'noerror)
   :bind (("C-h f" . helpful-callable)
-	 ("C-h v" . helpful-variable)
-	 ("C-h k" . helpful-key))
+         ("C-h v" . helpful-variable)
+         ("C-h k" . helpful-key))
   :config
   (use-package elisp-demos
     :if (require 'elisp-demos nil 'noerror)
     :init
     (advice-add 'helpful-update
-		:after #'elisp-demos-advice-helpful-update)))
+                :after #'elisp-demos-advice-helpful-update)))
 
 ;; Since vertico is there, ido/icomplete will not be used intentionally
 ;; In case they're loaded indirectly (ex: by lsp), use \n as separator
