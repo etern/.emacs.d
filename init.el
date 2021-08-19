@@ -19,6 +19,8 @@
 (require 'bind-key) ;; for use-package :bind
 (require 'diminish) ;; for use-package :diminish
 (setq use-package-verbose 1)
+(setq use-package-keywords ;; precedence  :if > :ensure
+      (append '(:if) (remove :if use-package-keywords)))
 
 (push "~/.emacs.d/lisp" load-path)
 (set-language-environment "UTF-8")
@@ -197,6 +199,7 @@
   :bind ("C-x g" . magit-status))
 
 (use-package vertico
+  :if (version<= "27.1" emacs-version)
   :ensure t
   :init (vertico-mode)
   :custom
