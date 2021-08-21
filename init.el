@@ -53,7 +53,7 @@
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (set-frame-size (selected-frame) 1000 600 t) ;; better: add "-geometry 115x35" to Windows shortcut
-  (setq frame-title-format '(multiple-frames "%e" (:eval (get-poem))))
+  (setq frame-title-format '(multiple-frames "%e" (:eval (poem-get 'content))))
   (set-fontset-font (frame-parameter nil 'font)
                     'han (font-spec :family "Microsoft Yahei"))
   (set-face-attribute 'mode-line nil :box nil) ;; flat mode line
@@ -301,12 +301,7 @@
   :ensure t
   :diminish 'page-break-lines-mode
   :config
-  (if (display-graphic-p)
-      (progn (get-poem-then-update t)
-             (setq dashboard-startup-banner "~/.emacs.d/.poem.txt")
-             (advice-add #'dashboard-refresh-buffer :after
-                         (lambda () (get-poem-then-update t))))
-    (setq dashboard-startup-banner nil))
+  (setq dashboard-startup-banner nil)
   (setq dashboard-items '((recents . 20)))
   (defun dashboard-insert-totd (list-size)
     (let* ((commands (seq-filter #'commandp obarray))
@@ -317,7 +312,21 @@
                       (documentation command)))
       (where-is command t)))
   (add-to-list 'dashboard-item-generators '(totd . dashboard-insert-totd))
-  (add-to-list 'dashboard-items '(totd . 1) t)
+  (add-to-list 'dashboard-items '(totd) t)
+  (when (display-graphic-p)
+      (advice-add #'dashboard-refresh-buffer :after #'poem-async-update)
+      (defun dashboard-dev-tools (list-size)
+        (insert (propertize "Dev tools:\n" 'face 'dashboard-heading))
+        (insert-button "ASCII Table\n" 'follow-link t
+                       'action (lambda (_btn) (list-charset-chars 'ascii)
+                                 (other-window 1)))
+        (insert-button "Calculator" 'follow-link t 'action (lambda (_) (calc))))
+      (defun dashboard-poem (list-size)
+        (insert (poem-get-formatted)))
+        (add-to-list 'dashboard-item-generators '(devtools . dashboard-dev-tools))
+        (add-to-list 'dashboard-items '(devtools) t)
+        (add-to-list 'dashboard-item-generators '(poem . dashboard-poem))
+        (add-to-list 'dashboard-items '(poem) t))
   (dashboard-setup-startup-hook))
 
 (use-package recentf

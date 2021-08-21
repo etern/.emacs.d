@@ -55,38 +55,35 @@
          (eval . (message \"executed\")))) ;; `eval` pseudo-variable for evaluation
  (c-mode . ((fill-column . 50))))")
 
-(defun decode-utf8-string (str)
-  (decode-coding-string
-   (mapconcat #'unibyte-string str "") 'utf-8))
+(defvar poem-cache-file "~/.emacs.d/.poem.json")
 
-(defvar poem-cache-file "~/.emacs.d/.poem.txt")
-
-(defun get-poem-then-update (&optional new-line)
-  "Schedule async download poem, read poem from cache file and
-return poem string"
+(defun poem-async-update ()
+  "Download poem asynchronously from `jinrishici.com`"
   (let ((url-request-extra-headers
 	 '(("X-User-Token" . "4xXGMG62BsykCCHWmj7ik4y2Z9bkiJ3T"))))
     (ignore-errors
       (url-retrieve
        "https://v2.jinrishici.com/sentence"
-       (lambda (status) ;; Schedule async download
-	 (goto-char url-http-end-of-headers)
-	 (let* ((data (alist-get 'data (json-read)))
-		(content (alist-get 'content data)))
-	   (with-temp-file poem-cache-file
-	     (insert (decode-utf8-string content))
-	     (when new-line
-	       (insert "\n"))))))
-      (with-temp-buffer ;; read cache immediately
-	(insert-file-contents poem-cache-file)
-	(buffer-string)))))
+       (lambda (status)
+	 (write-region url-http-end-of-headers (point-max) poem-cache-file))))))
 
-(defun get-poem ()
-  "Get poem from cache file"
+(defun poem-get (prop)
+  "Get poem from cache file, PROP can be 'content, 'origin"
   (ignore-errors
     (with-temp-buffer ;; read cache immediately
       (insert-file-contents poem-cache-file)
-      (buffer-string))))
+      (let ((data (alist-get 'data (json-read))))
+        (alist-get prop data)))))
+
+(defun poem-get-formatted ()
+  (let* ((poem (poem-get 'origin))
+         (lines (alist-get 'content poem))
+         (content (mapconcat #'identity lines "\n")))
+    (format "%s\n%s · %s\n%s"
+            (alist-get 'title poem)
+            (alist-get 'dynasty poem)
+            (alist-get 'author poem)
+            content)))
 
 (defun my/bing-search (text)
   "use browser bing.com search keyword
