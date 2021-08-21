@@ -88,5 +88,16 @@ return poem string"
       (insert-file-contents poem-cache-file)
       (buffer-string))))
 
+(defun my/bing-search (text)
+  "use browser bing.com search keyword
+keyword come from `active region` or `thing-at-point`"
+  (interactive
+   (if (use-region-p)
+       (list (buffer-substring-no-properties (region-beginning) (region-end)))
+     (list (thing-at-point 'symbol))))
+  (if (null text)
+      (message "don't know what to search")
+    (browse-url (url-encode-url (format "https://bing.com/search?q=%s" text)))))
+
 (provide 'my-functions)
 ;;; my-functions.el ends here

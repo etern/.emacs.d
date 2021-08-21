@@ -223,6 +223,7 @@
   (("C-x b" . consult-buffer)
    ("M-y" . consult-yank-pop)
    ("M-g i" . consult-imenu)
+   ("M-g o" . consult-outline)
    ("M-s o" . consult-line-symbol-at-point)
    ("M-s g" . consult-git-grep)
    ("M-s r" . consult-ripgrep)
@@ -230,10 +231,12 @@
    ("M-g f" . consult-flymake))
   :config
   (consult-customize
-   consult-ripgrep
+   consult-ripgrep consult-xref
    consult--source-file consult--source-project-file
    consult--source-bookmark
    :preview-key (kbd "M-."))
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
   (setq consult-project-root-function
         (lambda ()
           (when-let (project (project-current))
@@ -244,8 +247,9 @@
 
 (use-package embark
   :bind
-  (("C-." . embark-act)         ;; pick some comfortable binding
-   ("C-;" . embark-dwim)        ;; good alternative: M-.
+  (([remap describe-bindings] . embark-bindings)
+   :map minibuffer-local-map
+   ("C-." . embark-act)
    :map embark-buffer-map
    ("C-k" . kill-buffer)) ;; so both k & C-k works
   :config
@@ -253,6 +257,10 @@
   (delete #'kill-buffer embark-allow-edit-actions)
   (use-package embark-consult
     :after (embark consult)))
+;; embark only used for minibuffer
+;; stick with `C-.` for context menu, even without embark
+(global-set-key (kbd "C-. s") #'my/bing-search)
+(global-set-key (kbd "C-. w") #'whitespace-mode)
 
 (use-package semantic
   :bind ("C-c , s" . semantic-ia-show-summary))

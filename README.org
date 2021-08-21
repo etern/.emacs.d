@@ -48,7 +48,9 @@
 - ~C-c p p~ treemacs-select-window
 - ~<f8>~ treemacs
 - ~C-M-i~ company-complete
-- ~C-.~ embark-act
+- ~C-.~ embark-act (minibuffer-local-map)
+- ~C-. s~ my/bing-search
+- ~C-. w~ whitespace-mode
 
 * customize-variable
 - org-roam-directory
