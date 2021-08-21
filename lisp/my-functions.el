@@ -55,7 +55,8 @@
          (eval . (message \"executed\")))) ;; `eval` pseudo-variable for evaluation
  (c-mode . ((fill-column . 50))))")
 
-(defvar poem-cache-file "~/.emacs.d/.poem.json")
+(defvar poem-file "~/.emacs.d/.poem.json")
+(defvar poem-cache nil)
 
 (defun poem-async-update ()
   "Download poem asynchronously from `jinrishici.com`"
@@ -65,15 +66,19 @@
       (url-retrieve
        "https://v2.jinrishici.com/sentence"
        (lambda (status)
-	 (write-region url-http-end-of-headers (point-max) poem-cache-file))))))
+	 (write-region url-http-end-of-headers (point-max) poem-file)))))
+  (setq poem-cache nil))
 
 (defun poem-get (prop)
   "Get poem from cache file, PROP can be 'content, 'origin"
   (ignore-errors
-    (with-temp-buffer ;; read cache immediately
-      (insert-file-contents poem-cache-file)
-      (let ((data (alist-get 'data (json-read))))
-        (alist-get prop data)))))
+    (if poem-cache
+        (alist-get prop poem-cache)
+      (with-temp-buffer
+        (insert-file-contents poem-file)
+        (let ((data (alist-get 'data (json-read))))
+          (setq poem-cache data)
+          (alist-get prop data))))))
 
 (defun poem-get-formatted ()
   (let* ((poem (poem-get 'origin))
