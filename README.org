@@ -51,6 +51,7 @@
 - ~C-.~ embark-act (minibuffer-local-map)
 - ~C-. s~ my/bing-search
 - ~C-. w~ whitespace-mode
+- ~C-. t~ toggle-truncate-lines
 
 * customize-variable
 - org-roam-directory

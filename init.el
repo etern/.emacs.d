@@ -101,6 +101,7 @@
 ;;(yas-global-mode 1)
 (setq epa-file-select-keys nil)
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+(setq vc-handled-backends '(Git))
 ;;(setq scroll-conservatively 1000) ;; don't recenter point
 
 ;; Must set before (require 'org)
@@ -120,6 +121,9 @@
 
 ;; #auto-save-file# to /tmp
 (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
+;; make (symbol-at-point) break at chinese punctuation
+(mapc (lambda (ch) (modify-syntax-entry ch "." (standard-syntax-table)))
+      "，。？！")
 
 (use-package org
   :init
@@ -261,6 +265,7 @@
 ;; stick with `C-.` for context menu, even without embark
 (global-set-key (kbd "C-. s") #'my/bing-search)
 (global-set-key (kbd "C-. w") #'whitespace-mode)
+(global-set-key (kbd "C-. t") #'toggle-truncate-lines)
 
 (use-package semantic
   :bind ("C-c , s" . semantic-ia-show-summary))
@@ -294,7 +299,6 @@
 
 (use-package dumb-jump
   :init (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
-  :config (setq dumb-jump-selector 'ivy) ;; (setq dumb-jump-selector 'helm)
   :ensure)
 
 (use-package dashboard
