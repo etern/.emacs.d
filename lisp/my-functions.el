@@ -101,5 +101,14 @@ keyword come from `active region` or `thing-at-point`"
       (message "don't know what to search")
     (browse-url (url-encode-url (format "https://bing.com/search?q=%s" text)))))
 
+(defun my/toggle-debug (func)
+  "toggle debug-on-entry"
+  (interactive (list (symbol-at-point)))
+  (if (advice-member-p #'debug--implement-debug-on-entry func)
+      (progn (cancel-debug-on-entry func)
+             (message "debug canceled"))
+    (debug-on-entry func)
+    (message "debug enabled")))
+
 (provide 'my-functions)
 ;;; my-functions.el ends here

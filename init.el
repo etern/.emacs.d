@@ -35,6 +35,7 @@
 (menu-bar-mode -1)
 (add-hook 'prog-mode-hook
           (lambda ()
+            (electric-pair-local-mode 1)
             (setq indent-tabs-mode nil)))
 (add-hook 'c-mode-common-hook
           (lambda ()
@@ -117,7 +118,7 @@
 (load "my-functions.el")
 
 (global-set-key (kbd "C-x |") #'toggle-window-split)
-(global-set-key (kbd "C-x k") #'kill-this-buffer)
+(global-set-key [remap kill-buffer] #'kill-this-buffer)
 
 ;; #auto-save-file# to /tmp
 (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
@@ -126,7 +127,7 @@
       "，。？！")
 
 (use-package org
-  :init
+  :custom (org-imenu-depth 4)
   :hook (org-mode . (lambda () (set-fill-column 80)
                       (electric-indent-local-mode -1)))
   :config
@@ -266,6 +267,7 @@
 (global-set-key (kbd "C-. s") #'my/bing-search)
 (global-set-key (kbd "C-. w") #'whitespace-mode)
 (global-set-key (kbd "C-. t") #'toggle-truncate-lines)
+(global-set-key (kbd "C-. d") #'my/toggle-debug)
 
 (use-package semantic
   :bind ("C-c , s" . semantic-ia-show-summary))
@@ -463,3 +465,11 @@
 ;; In case they're loaded indirectly (ex: by lsp), use \n as separator
 (use-package ido :defer t :config (setf (nth 2 ido-decorations) "\n"))
 (use-package icomplete :defer t :custom (icomplete-separator "\n"))
+
+(use-package cc-mode
+  :config
+  (c-add-style
+   "mine" ;; inherit from gnu, with some customization
+   '("gnu" (c-basic-offset . 4)))
+  (setf (alist-get 'c-mode c-default-style) "mine"
+        (alist-get 'c++-mode c-default-style) "mine"))

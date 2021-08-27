@@ -52,6 +52,7 @@
 - ~C-. s~ my/bing-search
 - ~C-. w~ whitespace-mode
 - ~C-. t~ toggle-truncate-lines
+- ~C-. d~ my/toggle-debug
 
 * customize-variable
 - org-roam-directory
