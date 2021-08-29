@@ -256,10 +256,11 @@
    :map minibuffer-local-map
    ("C-." . embark-act)
    :map embark-buffer-map
-   ("C-k" . kill-buffer)) ;; so both k & C-k works
+   ([remap kill-buffer] . kill-this-buffer)
+   ("C-k" . kill-this-buffer)) ;; so both k & C-k works
   :config
   (setq embark-quit-after-action nil)
-  (delete #'kill-buffer embark-allow-edit-actions)
+  (add-to-list 'embark-post-action-hooks '(kill-this-buffer embark--restart))
   (use-package embark-consult
     :after (embark consult)))
 ;; embark only used for minibuffer
