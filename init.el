@@ -234,14 +234,15 @@
    ("M-s r" . consult-ripgrep)
    :map prog-mode-map
    ("M-g f" . consult-flymake))
+  :init
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
   :config
   (consult-customize
    consult-ripgrep consult-xref
    consult--source-file consult--source-project-file
    consult--source-bookmark
    :preview-key (kbd "M-."))
-  (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref)
   (setq consult-project-root-function
         (lambda ()
           (when-let (project (project-current))
@@ -301,7 +302,7 @@
          ("<mouse-2>" . mc/add-cursor-on-click)))
 
 (use-package dumb-jump
-  :init (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+  :init (add-hook 'xref-backend-functions #'dumb-jump-xref-activate 100)
   :ensure)
 
 (use-package dashboard
@@ -420,7 +421,6 @@
               ([remap completion-at-point] . company-complete))
   :hook ((prog-mode . company-mode)
          (shell-mode . company-mode)
-         (inferior-python-mode . company-mode)
          (eshell-mode . company-mode)))
 
 (use-package project
