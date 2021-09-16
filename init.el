@@ -35,7 +35,6 @@
 (menu-bar-mode -1)
 (add-hook 'prog-mode-hook
           (lambda ()
-            (electric-pair-local-mode 1)
             (setq indent-tabs-mode nil)))
 (add-hook 'c-mode-common-hook
           (lambda ()
@@ -55,8 +54,7 @@
   (scroll-bar-mode -1)
   (set-frame-size (selected-frame) 1000 600 t) ;; better: add "-geometry 115x35" to Windows shortcut
   (setq frame-title-format '(multiple-frames "%e" (:eval (poem-get 'content))))
-  (set-fontset-font (frame-parameter nil 'font)
-                    'han (font-spec :family "Microsoft Yahei"))
+  (set-fontset-font t 'chinese-gbk (font-spec :family "Microsoft Yahei"))
   (set-face-attribute 'mode-line nil :box nil) ;; flat mode line
   (set-face-attribute 'mode-line-inactive nil :box nil)
   )
@@ -322,7 +320,7 @@
   (add-to-list 'dashboard-item-generators '(totd . dashboard-insert-totd))
   (add-to-list 'dashboard-items '(totd) t)
   (when (display-graphic-p)
-      (advice-add #'dashboard-refresh-buffer :after #'poem-async-update)
+      (advice-add #'dashboard-refresh-buffer :after #'poem-update)
       (defun dashboard-dev-tools (list-size)
         (insert (propertize "Dev tools:\n" 'face 'dashboard-heading))
         (insert-button "ASCII Table\n" 'follow-link t
@@ -331,10 +329,10 @@
         (insert-button "Calculator" 'follow-link t 'action (lambda (_) (calc))))
       (defun dashboard-poem (list-size)
         (insert (poem-get-formatted)))
-        (add-to-list 'dashboard-item-generators '(devtools . dashboard-dev-tools))
-        (add-to-list 'dashboard-items '(devtools) t)
-        (add-to-list 'dashboard-item-generators '(poem . dashboard-poem))
-        (add-to-list 'dashboard-items '(poem) t))
+      (add-to-list 'dashboard-item-generators '(devtools . dashboard-dev-tools))
+      (add-to-list 'dashboard-items '(devtools) t)
+      (add-to-list 'dashboard-item-generators '(poem . dashboard-poem))
+      (add-to-list 'dashboard-items '(poem) t))
   (dashboard-setup-startup-hook))
 
 (use-package recentf
@@ -402,6 +400,8 @@
   :init
   (setq lsp-keymap-prefix "C-c p")
   :diminish eldoc-mode
+  :custom
+  (lsp-imenu-index-symbol-kinds '(Class Function Interface Enum Method Constuctor Operator TypeParameter Field Struct Property))
   :config
   (use-package flymake :diminish)
   (setq lsp-enable-snippet nil)
@@ -474,3 +474,7 @@
    '("gnu" (c-basic-offset . 4)))
   (setf (alist-get 'c-mode c-default-style) "mine"
         (alist-get 'c++-mode c-default-style) "mine"))
+
+(use-package elec-pair
+  :hook (prog-mode . electric-pair-local-mode)
+  :config (setq electric-pair-inhibit-predicate #'electric-pair-conservative-inhibit))

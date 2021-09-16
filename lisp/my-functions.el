@@ -58,7 +58,7 @@
 (defvar poem-file "~/.emacs.d/.poem.json")
 (defvar poem-cache nil)
 
-(defun poem-async-update ()
+(defun poem-update ()
   "Download poem asynchronously from `jinrishici.com`"
   (let ((url-request-extra-headers
 	 '(("X-User-Token" . "4xXGMG62BsykCCHWmj7ik4y2Z9bkiJ3T"))))
