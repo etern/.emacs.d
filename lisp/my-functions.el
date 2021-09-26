@@ -66,8 +66,8 @@
       (url-retrieve
        "https://v2.jinrishici.com/sentence"
        (lambda (status)
-	 (write-region url-http-end-of-headers (point-max) poem-file)))))
-  (setq poem-cache nil))
+	 (write-region url-http-end-of-headers (point-max) poem-file)
+         (setq poem-cache nil))))))
 
 (defun poem-get (prop)
   "Get poem from cache file, PROP can be 'content, 'origin"
@@ -109,6 +109,13 @@ keyword come from `active region` or `thing-at-point`"
              (message "debug canceled"))
     (debug-on-entry func)
     (message "debug enabled")))
+
+(defun my/copy-line-ref ()
+  "Copy reference of current line as <filename>:<line-num>"
+  (interactive)
+  (let ((ref (format "%s:%d" (buffer-file-name) (line-number-at-pos))))
+    (kill-new ref)
+    (message (format "Copied: %s" ref))))
 
 (provide 'my-functions)
 ;;; my-functions.el ends here

@@ -268,6 +268,7 @@
 (global-set-key (kbd "C-. w") #'whitespace-mode)
 (global-set-key (kbd "C-. t") #'toggle-truncate-lines)
 (global-set-key (kbd "C-. d") #'my/toggle-debug)
+(global-set-key (kbd "C-. l") #'my/copy-line-ref)
 
 (use-package semantic
   :bind ("C-c , s" . semantic-ia-show-summary))

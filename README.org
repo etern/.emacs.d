@@ -53,6 +53,7 @@
 - ~C-. w~ whitespace-mode
 - ~C-. t~ toggle-truncate-lines
 - ~C-. d~ my/toggle-debug
+- ~C-. l~ my/copy-line-ref
 
 * customize-variable
 - org-roam-directory
