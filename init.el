@@ -48,6 +48,11 @@
                  (concat "python " buffer-file-name))
             (setenv "PYTHONIOENCODING" "utf-8")
             (setenv "IPY_TEST_SIMPLE_PROMPT" "1")))
+(add-hook 'inferior-python-mode-hook
+          (lambda ()
+            (setq comint-input-ring-file-name "~/.emacs.d/.python.hist")
+            (comint-read-input-ring)
+            (add-hook 'kill-buffer-hook #'comint-write-input-ring)))
 
 (when (display-graphic-p)
   (tool-bar-mode -1)
