@@ -131,6 +131,7 @@
 
 (use-package org
   :custom (org-imenu-depth 4)
+  (org-src-preserve-indentation t)
   :hook (org-mode . (lambda () (set-fill-column 80)
                       (electric-indent-local-mode -1)))
   :config
@@ -194,7 +195,8 @@
 (use-package avy
   :ensure t
   :bind (("M-g M-g" . avy-goto-line)
-         ("M-g M-c" . avy-goto-char)))
+         ("M-g M-c" . avy-goto-char-timer)
+         ("M-g c" . avy-goto-char-timer)))
 
 (use-package ace-window
   :ensure t
@@ -483,4 +485,6 @@
 
 (use-package elec-pair
   :hook (prog-mode . electric-pair-local-mode)
-  :config (setq electric-pair-inhibit-predicate #'electric-pair-conservative-inhibit))
+  :config
+  (setq electric-pair-skip-whitespace nil
+        electric-pair-inhibit-predicate #'electric-pair-conservative-inhibit))
