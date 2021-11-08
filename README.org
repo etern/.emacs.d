@@ -43,7 +43,7 @@
 - ~C-<f8>~ Toggle imenu list
 - ~<f7>~ Compile (c/python)
 - ~C-x g~ Magit
-- ~C-c =~ expand-region
+- ~C-M-SPC~ expand-region
 - ~C-c p f~ project-find-file
 - ~C-c p p~ treemacs-select-window
 - ~<f8>~ treemacs

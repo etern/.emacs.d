@@ -1,6 +1,5 @@
 (package-initialize)
 (setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-                         ("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/")
                          ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 
 (setq custom-file "~/.emacs.d/custom.el")
@@ -122,6 +121,10 @@
 
 (global-set-key (kbd "C-x |") #'toggle-window-split)
 (global-set-key [remap kill-buffer] #'kill-this-buffer)
+(global-set-key [remap just-one-space] #'cycle-spacing)
+(global-set-key [remap upcase-word] #'upcase-dwim)
+(global-set-key [remap downcase-word] #'downcase-dwim)
+(global-set-key [remap capitalize-word] #'capitalize-dwim)
 
 ;; #auto-save-file# to /tmp
 (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
@@ -364,7 +367,7 @@
                      (pdf-misc-context-menu-minor-mode)))))
 
 (use-package expand-region
-  :bind ("C-c =" . er/expand-region))
+  :bind ([remap mark-sexp] . er/expand-region)) ;; "C-M-SPC"
 
 (use-package which-key
   :ensure t
@@ -477,9 +480,10 @@
 
 (use-package cc-mode
   :config
-  (c-add-style
-   "mine" ;; inherit from gnu, with some customization
-   '("gnu" (c-basic-offset . 4)))
+  (c-add-style "mine" '("gnu"  ;; inherit from gnu, with some customization
+                        (c-basic-offset . 4)
+                        (c-offsets-alist
+                         (innamespace . 0)))) ;; namespace no indent
   (setf (alist-get 'c-mode c-default-style) "mine"
         (alist-get 'c++-mode c-default-style) "mine"))
 
@@ -488,3 +492,12 @@
   :config
   (setq electric-pair-skip-whitespace nil
         electric-pair-inhibit-predicate #'electric-pair-conservative-inhibit))
+
+(use-package view
+  :init (setq view-read-only t)
+  :bind
+  (:map view-mode-map
+        ("j" . View-scroll-line-forward)
+        ("k" . View-scroll-line-backward)
+        ("b" . View-scroll-page-backward)
+        ("f" . View-scroll-page-forward)))
