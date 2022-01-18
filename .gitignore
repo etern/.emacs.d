@@ -27,3 +27,7 @@ mspyls/
 pyim/
 transient/
 .cache/
+places
+network-security.data
+org-roam.db
+projects

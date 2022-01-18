@@ -32,6 +32,7 @@
 (blink-cursor-mode -1)
 (column-number-mode)
 (menu-bar-mode -1)
+(save-place-mode)
 (add-hook 'prog-mode-hook
           (lambda ()
             (setq indent-tabs-mode nil)))
@@ -56,7 +57,7 @@
 (when (display-graphic-p)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
-  (set-frame-size (selected-frame) 1000 600 t) ;; better: add "-geometry 115x35" to Windows shortcut
+  (set-frame-size (selected-frame) 110 30) ;; better: add "-geometry 115x35" to Windows shortcut
   (setq frame-title-format '(multiple-frames "%e" (:eval (poem-get 'content))))
   (set-fontset-font t 'chinese-gbk (font-spec :family "Microsoft Yahei"))
   (set-face-attribute 'mode-line nil :box nil) ;; flat mode line
@@ -135,6 +136,7 @@
 (use-package org
   :custom (org-imenu-depth 4)
   (org-src-preserve-indentation t)
+  (org-use-speed-commands t)
   :hook (org-mode . (lambda () (set-fill-column 80)
                       (electric-indent-local-mode -1)))
   :config
@@ -347,9 +349,9 @@
   (dashboard-setup-startup-hook))
 
 (use-package recentf
-  :config
-  (add-to-list 'recentf-exclude "\\.emacs\\.d/recentf$")
-  (add-to-list 'recentf-exclude "\\.emacs\\.d/bookmarks$"))
+  :custom (recentf-exclude '("\\.emacs\\.d/recentf$"
+                             "\\.emacs\\.d/elpa/"
+                             "\\.emacs\\.d/bookmarks$")))
 
 (use-package pdf-tools
   :if (display-graphic-p)
@@ -494,7 +496,7 @@
         electric-pair-inhibit-predicate #'electric-pair-conservative-inhibit))
 
 (use-package view
-  :init (setq view-read-only t)
+  :init (setq view-read-only t) ;; C-x C-q
   :bind
   (:map view-mode-map
         ("j" . View-scroll-line-forward)
