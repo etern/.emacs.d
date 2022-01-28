@@ -138,6 +138,7 @@
   (org-src-preserve-indentation t)
   (org-use-speed-commands t)
   :hook (org-mode . (lambda () (set-fill-column 80)
+                      (org-next-visible-heading 1)
                       (electric-indent-local-mode -1)))
   :config
   (require 'org-tempo) ;; use `<s` to expand src_block
@@ -239,9 +240,12 @@
    ("M-y" . consult-yank-pop)
    ("M-g i" . consult-imenu)
    ("M-g o" . consult-outline)
-   ("M-s o" . consult-line-symbol-at-point)
+   ("M-s l" . consult-line-multi-symbol-at-point)
    ("M-s g" . consult-git-grep)
    ("M-s r" . consult-ripgrep)
+   ("M-s f" . consult-find) ;; `choco install findutils' on Win
+   :map isearch-mode-map
+   ("M-s l" . consult-line)
    :map prog-mode-map
    ("M-g f" . consult-flymake))
   :init
@@ -257,9 +261,9 @@
         (lambda ()
           (when-let (project (project-current))
             (car (project-roots project)))))
-  (defun consult-line-symbol-at-point ()
+  (defun consult-line-multi-symbol-at-point ()
     (interactive)
-    (consult-line (thing-at-point 'symbol))))
+    (consult-line-multi (thing-at-point 'symbol))))
 
 (use-package embark
   :bind
@@ -434,7 +438,10 @@
               ([remap completion-at-point] . company-complete))
   :hook ((prog-mode . company-mode)
          (shell-mode . company-mode)
-         (eshell-mode . company-mode)))
+         (eshell-mode . company-mode))
+  :custom
+  (company-transformers '(company-sort-by-occurrence
+                          company-sort-prefer-same-case-prefix)))
 
 (use-package project
   :bind ("C-c p f" . project-find-file))
@@ -461,7 +468,9 @@
 
 (use-package dired-x
   :custom
-  (dired-dwim-target t))
+  (dired-dwim-target t)
+  :config
+  (unbind-key "M-s f" dired-mode-map)) ;; "M-s f" is taken by consult-find
 
 (use-package helpful
   :if (require 'helpful nil 'noerror)

@@ -40,6 +40,8 @@
 - ~M-g f~ consult-flymake (prog-mode)
 - ~M-s r~ consult-ripgrep
 - ~M-s g~ consult-git-grep
+- ~M-s f~ consult-find
+- ~M-s l~ consult-line-multi
 - ~C-<f8>~ Toggle imenu list
 - ~<f7>~ Compile (c/python)
 - ~C-x g~ Magit
