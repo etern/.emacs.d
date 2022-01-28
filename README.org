@@ -56,6 +56,9 @@
 - ~C-. t~ toggle-truncate-lines
 - ~C-. d~ my/toggle-debug
 - ~C-. l~ my/copy-line-ref
+- ~C-c a~ org-agenda
+- ~C-c c~ org-capture
 
 * customize-variable
 - org-roam-directory
+- my/netdisk-dir

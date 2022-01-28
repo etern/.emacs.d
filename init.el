@@ -5,6 +5,8 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (unless (file-exists-p custom-file)
   (write-region "" nil custom-file)) ;; touch file
+(when (display-graphic-p)
+  (defcustom my/netdisk-dir "c:/Users/Administrator/OneDrive" "Netdisk" :group 'my))
 (load custom-file)
 
 ;; Bootstrap `use-package`
@@ -33,6 +35,7 @@
 (column-number-mode)
 (menu-bar-mode -1)
 (save-place-mode)
+(savehist-mode)
 (add-hook 'prog-mode-hook
           (lambda ()
             (setq indent-tabs-mode nil)))
@@ -512,3 +515,22 @@
         ("k" . View-scroll-line-backward)
         ("b" . View-scroll-page-backward)
         ("f" . View-scroll-page-forward)))
+
+(use-package org-capture
+  :if (display-graphic-p)
+  :bind
+  ("C-c c" . org-capture)
+  :config
+  (setq my/journal-file (format "%s/Documents/%s" my/netdisk-dir (format-time-string "%Y.org")))
+  (defun my/journal-goto-today ()
+    (let ((heading (format-time-string "* [%Y-%m-%d %a]")))
+      (goto-char (point-max))
+      (unless (re-search-backward (regexp-quote heading) nil t)
+        (goto-char (point-max))
+        (or (bolp) (insert "\n"))
+        (insert heading "\n")) ;; TODO don't change file on cancel (C-c C-k)
+      (org-end-of-subtree)))
+  :custom
+  (org-capture-templates
+   '(("j" "Write journal" plain (file+function my/journal-file my/journal-goto-today)
+      nil :empty-lines-after 1))))
