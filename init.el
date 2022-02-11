@@ -111,14 +111,13 @@
 (setq vc-handled-backends '(Git))
 ;;(setq scroll-conservatively 1000) ;; don't recenter point
 
-;; Must set before (require 'org)
+;; markup 记号前后允许中文, must set before (require 'org)
 (setq org-emphasis-regexp-components
-      ;; markup 记号前后允许中文
-      (list (concat " \t('\"{"            "[:nonascii:]")
-            (concat "- \t.,:!?;'\")}\\["  "[:nonascii:]")
-            " \t\r\n,\"'"
-            "."
-            1))
+      '("-[:space:]('\"{[:nonascii:]"
+        "-[:space:].,:!?;'\")}\\[[:nonascii:]"
+        "[:space:]" ;; github render '" not supported
+        "."
+        1))
 
 ;;(load "setup-org-knowledge-project.el")
 (load "my-functions.el")
@@ -257,7 +256,7 @@
   :config
   (consult-customize
    consult-ripgrep consult-xref
-   consult--source-file consult--source-project-file
+   consult--source-recent-file consult--source-project-recent-file
    consult--source-bookmark
    :preview-key (kbd "M-."))
   (setq consult-project-root-function
@@ -267,6 +266,13 @@
   (defun consult-line-multi-symbol-at-point ()
     (interactive)
     (consult-line-multi (thing-at-point 'symbol))))
+
+(use-package consult-dir
+  :ensure t
+  :bind (("C-x C-d" . consult-dir)
+         :map vertico-map
+         ("C-x C-d" . consult-dir)
+         ("C-x f" . consult-dir-jump-file)))
 
 (use-package embark
   :bind
