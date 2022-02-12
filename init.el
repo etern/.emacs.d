@@ -30,7 +30,7 @@
 (setq make-backup-files nil)
 (setq inhibit-startup-screen t)
 ;;(desktop-save-mode 1)
-(show-paren-mode)
+
 (blink-cursor-mode -1)
 (column-number-mode)
 (menu-bar-mode -1)
@@ -414,6 +414,12 @@
   :hook ((prog-mode . hl-line-mode)
          (dired-mode . hl-line-mode)))
 
+(use-package paren
+  :init (show-paren-mode)
+  :custom
+  (show-paren-when-point-inside-paren t)
+  (show-paren-when-point-in-periphery t))
+
 (use-package lsp-pyright
   :defer t
   :hook (python-mode . (lambda ()
@@ -540,3 +546,13 @@
   (org-capture-templates
    '(("j" "Write journal" plain (file+function my/journal-file my/journal-goto-today)
       nil :empty-lines-after 1))))
+
+(use-package isearch
+  :if (version<= "27.1" emacs-version)
+  :bind (:map isearch-mode-map
+         ([remap isearch-delete-char] . isearch-del-char))
+  :custom (isearch-lazy-count t))
+
+(use-package anzu
+  :ensure t
+  :bind ([remap query-replace] . anzu-query-replace))
