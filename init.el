@@ -470,16 +470,13 @@
          ("k" . treemacs-previous-line)))
 
 (use-package org-roam
-  :init
-  (setq org-roam-v2-ack t)
   :custom
   (org-roam-graph-link-hidden-types '("http" "https" "info" "help"))
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
          ("C-c n g" . org-roam-graph)
          ("C-c n i" . org-roam-node-insert))
-  :config
-  (org-roam-setup))
+  :config (org-roam-db-autosync-mode))
 
 (use-package dired-x
   :custom
