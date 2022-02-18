@@ -68,6 +68,7 @@
   )
 
 (when (eq system-type 'windows-nt)
+  (setq default-directory "~/")
   (setq gc-cons-threshold (* 512 1024 1024))
   (setq gc-cons-percentage 0.5)
   (run-with-idle-timer 5 t #'garbage-collect)
@@ -203,7 +204,7 @@
 (use-package avy
   :ensure t
   :bind (("M-g M-g" . avy-goto-line)
-         ("M-g M-c" . avy-goto-char-timer)
+         ("M-g w" . avy-goto-word-1)
          ("M-g c" . avy-goto-char-timer)))
 
 (use-package ace-window
@@ -389,6 +390,9 @@
   :diminish 'which-key-mode
   :config
   (which-key-mode 1)
+  ;; hide verbose bindings
+  (add-to-list 'which-key-replacement-alist
+               '((nil . "digit-argument") . t))
   (setq which-key-show-early-on-C-h t)
   (setq which-key-idle-delay 3.0)
   (setq which-key-idle-secondary-delay 0))
@@ -478,9 +482,12 @@
          ("C-c n i" . org-roam-node-insert))
   :config (org-roam-db-autosync-mode))
 
-(use-package dired-x
+(use-package dired
   :custom
   (dired-dwim-target t)
+  :bind (("C-x C-j" . dired-jump) ;; cmd from dired-x
+         :map dired-mode-map
+         ([remap dired-summary] . which-key-show-major-mode))
   :config
   (unbind-key "M-s f" dired-mode-map)) ;; "M-s f" is taken by consult-find
 
