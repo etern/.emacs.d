@@ -328,6 +328,7 @@
 
 (use-package dumb-jump
   :init (add-hook 'xref-backend-functions #'dumb-jump-xref-activate 100)
+  :defer t
   :ensure)
 
 (use-package dashboard
@@ -492,9 +493,10 @@
   (unbind-key "M-s f" dired-mode-map)) ;; "M-s f" is taken by consult-find
 
 (use-package helpful
-  :if (require 'helpful nil 'noerror)
+  :if (fboundp 'helpful-callable)
   :bind (("C-h f" . helpful-callable)
          ("C-h v" . helpful-variable)
+         ("C-h o" . helpful-symbol)
          ("C-h k" . helpful-key))
   :config
   (use-package elisp-demos
@@ -509,6 +511,7 @@
 (use-package icomplete :defer t :custom (icomplete-separator "\n"))
 
 (use-package cc-mode
+  :defer t
   :config
   (c-add-style "mine" '("gnu"  ;; inherit from gnu, with some customization
                         (c-basic-offset . 4)
