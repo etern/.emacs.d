@@ -39,23 +39,6 @@
 (add-hook 'prog-mode-hook
           (lambda ()
             (setq indent-tabs-mode nil)))
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (abbrev-mode -1)
-            (global-set-key (kbd "<f7>") #'compile)))
-(add-hook 'python-mode-hook
-          (lambda ()
-            (setq tab-width 4)
-            (global-set-key (kbd "<f7>") #'compile)
-            (set (make-local-variable 'compile-command)
-                 (concat "python " buffer-file-name))
-            (setenv "PYTHONIOENCODING" "utf-8")
-            (setenv "IPY_TEST_SIMPLE_PROMPT" "1")))
-(add-hook 'inferior-python-mode-hook
-          (lambda ()
-            (setq comint-input-ring-file-name "~/.emacs.d/.python.hist")
-            (comint-read-input-ring)
-            (add-hook 'kill-buffer-hook #'comint-write-input-ring)))
 
 (when (display-graphic-p)
   (tool-bar-mode -1)
@@ -197,10 +180,6 @@
          ("C-c l" . org-store-link))
 )
 
-(define-auto-insert "\\.py$"
-  (lambda ()
-    (insert "#! /usr/bin/env python3\n# -*- coding:utf-8 -*-\n")))
-
 (use-package avy
   :ensure t
   :bind (("M-g M-g" . avy-goto-line)
@@ -276,6 +255,7 @@
          ("C-x f" . consult-dir-jump-file)))
 
 (use-package embark
+  :if (fboundp 'embark-act)
   :bind
   (([remap describe-bindings] . embark-bindings)
    :map minibuffer-local-map
@@ -348,7 +328,7 @@
   (add-to-list 'dashboard-item-generators '(totd . dashboard-insert-totd))
   (add-to-list 'dashboard-items '(totd) t)
   (when (display-graphic-p)
-      (advice-add #'dashboard-refresh-buffer :after #'poem-update)
+      (advice-add #'dashboard-refresh-buffer :after (lambda (&rest _) (poem-update)))
       (defun dashboard-dev-tools (list-size)
         (insert (propertize "Dev tools:\n" 'face 'dashboard-heading))
         (insert-button "ASCII Table\n" 'follow-link t
@@ -384,6 +364,7 @@
                      (pdf-misc-context-menu-minor-mode)))))
 
 (use-package expand-region
+  :if (boundp 'er/expand-region)
   :bind ([remap mark-sexp] . er/expand-region)) ;; "C-M-SPC"
 
 (use-package which-key
@@ -513,12 +494,37 @@
 (use-package cc-mode
   :defer t
   :config
+  (bind-key "<f7>" #'compile c-mode-base-map)
   (c-add-style "mine" '("gnu"  ;; inherit from gnu, with some customization
                         (c-basic-offset . 4)
                         (c-offsets-alist
                          (innamespace . 0)))) ;; namespace no indent
   (setf (alist-get 'c-mode c-default-style) "mine"
-        (alist-get 'c++-mode c-default-style) "mine"))
+        (alist-get 'c++-mode c-default-style) "mine")
+  (add-hook 'c-mode-common-hook
+            (lambda ()
+              (abbrev-mode -1)
+              (global-set-key (kbd "<f7>") #'compile))))
+
+(use-package python
+  :defer t
+  :config
+  (bind-key "<f7>" #'compile python-mode-map)
+  (setenv "IPY_TEST_SIMPLE_PROMPT" "1")
+  (setenv "PYTHONIOENCODING" "utf-8")
+  (add-hook 'python-mode-hook
+            (lambda ()
+              (setq tab-width 4)
+              (set (make-local-variable 'compile-command)
+                   (concat "python " buffer-file-name))))
+  (add-hook 'inferior-python-mode-hook
+            (lambda ()
+              (setq comint-input-ring-file-name "~/.emacs.d/.python.hist")
+              (comint-read-input-ring)
+              (add-hook 'kill-buffer-hook #'comint-write-input-ring)))
+  (define-auto-insert "\\.py$"
+    (lambda ()
+      (insert "#! /usr/bin/env python3\n# -*- coding:utf-8 -*-\n"))))
 
 (use-package elec-pair
   :hook (prog-mode . electric-pair-local-mode)
