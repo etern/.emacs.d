@@ -6,7 +6,8 @@
 (unless (file-exists-p custom-file)
   (write-region "" nil custom-file)) ;; touch file
 (when (display-graphic-p)
-  (defcustom my/netdisk-dir "c:/Users/Administrator/OneDrive" "Netdisk" :group 'my))
+  (defcustom my/netdisk-dir "c:/Users/Administrator/OneDrive"
+    "Netdisk" :type 'string :group 'my))
 (load custom-file)
 
 ;; Bootstrap `use-package`
@@ -16,12 +17,12 @@
   (package-install 'diminish))
 
 (eval-when-compile
-  (require 'use-package))
+  (require 'use-package)
+  (setq use-package-keywords ;; precedence  :if > :ensure
+        (append '(:if) (remove :if use-package-keywords))))
 (require 'bind-key) ;; for use-package :bind
 (require 'diminish) ;; for use-package :diminish
 (setq use-package-verbose 1)
-(setq use-package-keywords ;; precedence  :if > :ensure
-      (append '(:if) (remove :if use-package-keywords)))
 
 (push "~/.emacs.d/lisp" load-path)
 (set-language-environment "UTF-8")
@@ -179,6 +180,10 @@
          :map org-mode-map
          ("C-c l" . org-store-link))
 )
+
+(use-package tmm
+  :defer t
+  :custom (tmm-completion-prompt nil))
 
 (use-package avy
   :ensure t
@@ -344,6 +349,7 @@
   (dashboard-setup-startup-hook))
 
 (use-package recentf
+  :init (recentf-mode)
   :custom (recentf-exclude '("\\.emacs\\.d/recentf$"
                              "\\.emacs\\.d/elpa/"
                              "\\.emacs\\.d/bookmarks$")))
@@ -364,7 +370,7 @@
                      (pdf-misc-context-menu-minor-mode)))))
 
 (use-package expand-region
-  :if (boundp 'er/expand-region)
+  :if (fboundp 'er/expand-region)
   :bind ([remap mark-sexp] . er/expand-region)) ;; "C-M-SPC"
 
 (use-package which-key
