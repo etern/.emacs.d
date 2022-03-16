@@ -39,6 +39,7 @@
 (savehist-mode)
 (add-hook 'prog-mode-hook
           (lambda ()
+            (setq eldoc-minor-mode-string nil)
             (setq indent-tabs-mode nil)))
 
 (when (display-graphic-p)
@@ -47,9 +48,10 @@
   (set-frame-size (selected-frame) 110 30) ;; better: add "-geometry 115x35" to Windows shortcut
   (setq frame-title-format '(multiple-frames "%e" (:eval (poem-get 'content))))
   (set-fontset-font t 'chinese-gbk (font-spec :family "Microsoft Yahei"))
+  (when (member "Segoe UI Emoji" (font-family-list))
+    (set-fontset-font t 'symbol (font-spec :family "Segoe UI Emoji") nil 'prepend))
   (set-face-attribute 'mode-line nil :box nil) ;; flat mode line
-  (set-face-attribute 'mode-line-inactive nil :box nil)
-  )
+  (set-face-attribute 'mode-line-inactive nil :box nil))
 
 (when (eq system-type 'windows-nt)
   (setq default-directory "~/")
@@ -108,6 +110,9 @@
 (load "my-functions.el")
 
 (global-set-key (kbd "C-x |") #'toggle-window-split)
+(global-set-key (kbd "M-k") #'kill-buffer) ; unbind kill-sentence
+(global-set-key (kbd "M-h") #'previous-buffer) ; unbind mark-paragraph
+(global-set-key (kbd "M-H") #'next-buffer)
 (global-set-key [remap kill-buffer] #'kill-this-buffer)
 (global-set-key [remap just-one-space] #'cycle-spacing)
 (global-set-key [remap upcase-word] #'upcase-dwim)
@@ -407,7 +412,7 @@
          (dired-mode . hl-line-mode)))
 
 (use-package paren
-  :init (show-paren-mode)
+  :hook (prog-mode . show-paren-mode)
   :custom
   (show-paren-when-point-inside-paren t)
   (show-paren-when-point-in-periphery t))
@@ -449,9 +454,6 @@
   :custom
   (company-transformers '(company-sort-by-occurrence
                           company-sort-prefer-same-case-prefix)))
-
-(use-package project
-  :bind ("C-c p f" . project-find-file))
 
 (use-package treemacs
   :defer t

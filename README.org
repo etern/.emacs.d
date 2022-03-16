@@ -46,7 +46,6 @@
 - ~<f7>~ Compile (c/python)
 - ~C-x g~ Magit
 - ~C-M-SPC~ expand-region
-- ~C-c p f~ project-find-file
 - ~C-c p p~ treemacs-select-window
 - ~<f8>~ treemacs
 - ~C-M-i~ company-complete
@@ -58,6 +57,8 @@
 - ~C-. l~ my/copy-line-ref
 - ~C-c a~ org-agenda
 - ~C-c c~ org-capture
+- ~M-h/H~ previous-buffer/next-buffer
+- ~M-k~ kill-this-buffer
 
 * customize-variable
 - org-roam-directory
