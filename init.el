@@ -210,6 +210,9 @@
   :if (version<= "27.1" emacs-version)
   :ensure t
   :init (vertico-mode)
+  :bind (:map vertico-map
+              ("<next>" . vertico-scroll-up)
+              ("<prior>" . vertico-scroll-down))
   :custom
   (completion-styles '(substring flex))
   (completion-ignore-case t)
@@ -322,11 +325,11 @@
   :ensure)
 
 (use-package dashboard
+  :if (display-graphic-p)
   :ensure t
   :diminish 'page-break-lines-mode
   :config
   (setq dashboard-startup-banner nil)
-  (setq dashboard-items '((recents . 20)))
   (defun dashboard-insert-totd (list-size)
     (let* ((commands (seq-filter #'commandp obarray))
            (command (nth (random (length commands)) commands)))
@@ -335,22 +338,19 @@
                       (symbol-value 'command)
                       (documentation command)))
       (where-is command t)))
+  (advice-add #'dashboard-refresh-buffer :after (lambda (&rest _) (poem-update)))
+  (defun dashboard-dev-tools (list-size)
+    (insert (propertize "Dev tools:\n" 'face 'dashboard-heading))
+    (insert-button "ASCII Table\n" 'follow-link t
+                   'action (lambda (_btn) (list-charset-chars 'ascii)
+                             (other-window 1)))
+    (insert-button "Calculator" 'follow-link t 'action (lambda (_) (calc))))
+  (defun dashboard-poem (list-size)
+    (insert (poem-get-formatted)))
   (add-to-list 'dashboard-item-generators '(totd . dashboard-insert-totd))
-  (add-to-list 'dashboard-items '(totd) t)
-  (when (display-graphic-p)
-      (advice-add #'dashboard-refresh-buffer :after (lambda (&rest _) (poem-update)))
-      (defun dashboard-dev-tools (list-size)
-        (insert (propertize "Dev tools:\n" 'face 'dashboard-heading))
-        (insert-button "ASCII Table\n" 'follow-link t
-                       'action (lambda (_btn) (list-charset-chars 'ascii)
-                                 (other-window 1)))
-        (insert-button "Calculator" 'follow-link t 'action (lambda (_) (calc))))
-      (defun dashboard-poem (list-size)
-        (insert (poem-get-formatted)))
-      (add-to-list 'dashboard-item-generators '(devtools . dashboard-dev-tools))
-      (add-to-list 'dashboard-items '(devtools) t)
-      (add-to-list 'dashboard-item-generators '(poem . dashboard-poem))
-      (add-to-list 'dashboard-items '(poem) t))
+  (add-to-list 'dashboard-item-generators '(devtools . dashboard-dev-tools))
+  (add-to-list 'dashboard-item-generators '(poem . dashboard-poem))
+  (setq dashboard-items '((recents . 20) totd devtools poem))
   (dashboard-setup-startup-hook))
 
 (use-package recentf
