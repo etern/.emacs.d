@@ -62,5 +62,6 @@
 
 * customize-variable
 - org-roam-directory
-- my/netdisk-dir
 - org-agenda-files
+- my/netdisk-dir
+- my/hide-title-bar

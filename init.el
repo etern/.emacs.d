@@ -7,7 +7,9 @@
   (write-region "" nil custom-file)) ;; touch file
 (when (display-graphic-p)
   (defcustom my/netdisk-dir "c:/Users/Administrator/OneDrive"
-    "Netdisk" :type 'string :group 'my))
+    "Netdisk" :type 'string :group 'my)
+  (defcustom my/hide-title-bar nil "Hide title bar, restart emacs to take effect"
+    :type 'boolean :group 'my))
 (load custom-file)
 
 ;; Bootstrap `use-package`
@@ -46,7 +48,10 @@
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (set-frame-size (selected-frame) 110 30) ;; better: add "-geometry 115x35" to Windows shortcut
-  (setq frame-title-format '(multiple-frames "%e" (:eval (poem-get 'content))))
+  (if my/hide-title-bar
+      (setq default-frame-alist '((undecorated . t) (drag-internal-border . 1)
+                                  (internal-border-width . 5)))
+    (setq frame-title-format '(multiple-frames "%e" (:eval (poem-get 'content)))))
   (set-fontset-font t 'chinese-gbk (font-spec :family "Microsoft Yahei"))
   (when (member "Segoe UI Emoji" (font-family-list))
     (set-fontset-font t 'symbol (font-spec :family "Segoe UI Emoji") nil 'prepend))
