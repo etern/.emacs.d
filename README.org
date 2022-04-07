@@ -52,7 +52,6 @@
 - ~C-.~ embark-act (minibuffer-local-map)
 - ~C-. s~ my/bing-search
 - ~C-. w~ whitespace-mode
-- ~C-. t~ toggle-truncate-lines
 - ~C-. d~ my/toggle-debug
 - ~C-. l~ my/copy-line-ref
 - ~C-c a~ org-agenda

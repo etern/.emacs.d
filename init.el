@@ -1,3 +1,5 @@
+;;; init.el --- My Emacs Config  -*- lexical-binding: t; -*-
+
 (package-initialize)
 (setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
                          ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
@@ -99,7 +101,6 @@
 
 ;;(yas-global-mode 1)
 (setq epa-file-select-keys nil)
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
 (setq vc-handled-backends '(Git))
 ;;(setq scroll-conservatively 1000) ;; don't recenter point
 
@@ -237,7 +238,6 @@
   :ensure t
   :bind
   (("C-x b" . consult-buffer)
-   ("M-y" . consult-yank-pop)
    ("M-g i" . consult-imenu)
    ("M-g o" . consult-outline)
    ("M-s l" . consult-line-multi-symbol-at-point)
@@ -290,16 +290,8 @@
 ;; stick with `C-.` for context menu, even without embark
 (global-set-key (kbd "C-. s") #'my/bing-search)
 (global-set-key (kbd "C-. w") #'whitespace-mode)
-(global-set-key (kbd "C-. t") #'toggle-truncate-lines)
 (global-set-key (kbd "C-. d") #'my/toggle-debug)
 (global-set-key (kbd "C-. l") #'my/copy-line-ref)
-
-(use-package semantic
-  :bind ("C-c , s" . semantic-ia-show-summary))
-
-;;(use-package ede
-;;  :init
-;;  (global-ede-mode))
 
 (use-package cmake-mode
   :commands cmake-mode
@@ -313,7 +305,7 @@
   :bind ("C-<f8>" . imenu-list-smart-toggle))
 
 (use-package nyan-mode
-  :if window-system
+  :if (display-graphic-p)
   :ensure t
   :init (nyan-mode))
 
@@ -340,7 +332,7 @@
            (command (nth (random (length commands)) commands)))
       (insert (propertize "Tip of the day:\n" 'face 'dashboard-heading))
       (insert (format "Command: %s\n\n%s\n\nInvoke with:\n\n"
-                      (symbol-value 'command)
+                      (symbol-name command)
                       (documentation command)))
       (where-is command t)))
   (advice-add #'dashboard-refresh-buffer :after (lambda (&rest _) (poem-update)))
@@ -417,7 +409,6 @@
          (dired-mode . hl-line-mode)))
 
 (use-package paren
-  :hook (prog-mode . show-paren-mode)
   :custom
   (show-paren-when-point-inside-paren t)
   (show-paren-when-point-in-periphery t))
@@ -480,9 +471,9 @@
 (use-package dired
   :custom
   (dired-dwim-target t)
-  :bind (("C-x C-j" . dired-jump) ;; cmd from dired-x
-         :map dired-mode-map
-         ([remap dired-summary] . which-key-show-major-mode))
+  (dired-kill-when-opening-new-dired-buffer t)
+  :bind (:map dired-mode-map
+              ([remap dired-summary] . which-key-show-major-mode))
   :config
   (unbind-key "M-s f" dired-mode-map)) ;; "M-s f" is taken by consult-find
 
