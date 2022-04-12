@@ -34,6 +34,8 @@
 (setq ring-bell-function 'ignore)
 (setq make-backup-files nil)
 (setq inhibit-startup-screen t)
+(setq completions-detailed t)
+;;(setq completion-auto-help nil) ;; never show *Completions* buffer
 ;;(desktop-save-mode 1)
 
 (blink-cursor-mode -1)
@@ -79,15 +81,14 @@
     (interactive)
     (if (eq mac-current-keyboard 'usb)
         (progn
-          (setq mac-current-keyboard 'embeded)
-          (setq mac-option-modifier 'control)
-          (setq mac-command-modifier 'meta)
+          (setq mac-current-keyboard 'embeded
+                mac-option-modifier 'control
+                mac-command-modifier 'meta)
           (message "Remap to Embeded keyboard"))
-      (progn
-        (setq mac-current-keyboard 'usb)
-        (setq mac-option-modifier 'meta)
-        (setq mac-command-modifier 'super)
-        (message "Remap to USB keyboard"))))
+      (setq mac-current-keyboard 'usb
+            mac-option-modifier 'meta
+            mac-command-modifier 'super)
+      (message "Remap to USB keyboard")))
 
   (use-package exec-path-from-shell
     :ensure t
@@ -99,7 +100,6 @@
   (global-unset-key (kbd "s-x"))
   (global-set-key (kbd "C-s-f") 'toggle-frame-fullscreen))
 
-;;(yas-global-mode 1)
 (setq epa-file-select-keys nil)
 (setq vc-handled-backends '(Git))
 ;;(setq scroll-conservatively 1000) ;; don't recenter point
@@ -112,7 +112,6 @@
         "."
         1))
 
-;;(load "setup-org-knowledge-project.el")
 (load "my-functions.el")
 
 (global-set-key (kbd "C-x |") #'toggle-window-split)
@@ -190,6 +189,8 @@
   :bind (("C-c a" . org-agenda)
          :map org-mode-map
          ("C-c l" . org-store-link))
+  :config
+  (unbind-key "M-h" org-mode-map) ;; unbind `org-mark-element', occupied by `previous-buffer'
 )
 
 (use-package tmm
@@ -263,7 +264,7 @@
             (car (project-roots project)))))
   (defun consult-line-multi-symbol-at-point ()
     (interactive)
-    (consult-line-multi (thing-at-point 'symbol))))
+    (consult-line-multi t (thing-at-point 'symbol))))
 
 (use-package consult-dir
   :ensure t
