@@ -485,6 +485,14 @@
   :bind (:map dired-mode-map
               ([remap dired-summary] . which-key-show-major-mode))
   :config
+  (defun my/dired-dim-git-ignores ()
+    "Dim out .gitignore contents, folder/glob not handled"
+    (when-let ((_ (require 'vc))
+               (ignores (mapcar (lambda (s) (string-trim-right s "/"))
+                                (vc-default-ignore-completion-table 'git ".gitignore")))
+               (exts (make-local-variable 'completion-ignored-extensions)))
+      (dolist (item ignores) (add-to-list exts item))))
+  (add-hook 'dired-mode-hook #'my/dired-dim-git-ignores)
   (unbind-key "M-s f" dired-mode-map)) ;; "M-s f" is taken by consult-find
 
 (use-package helpful
