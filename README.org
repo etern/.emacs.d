@@ -54,6 +54,7 @@
 - ~C-. w~ whitespace-mode
 - ~C-. d~ my/toggle-debug
 - ~C-. l~ my/copy-line-ref
+- ~C-. j~ my/toggle-dumb-jump-order
 - ~C-c a~ org-agenda
 - ~C-c c~ org-capture
 - ~M-h/H~ previous-buffer/next-buffer

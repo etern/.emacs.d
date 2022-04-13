@@ -319,8 +319,17 @@
 
 (use-package dumb-jump
   :init (add-hook 'xref-backend-functions #'dumb-jump-xref-activate 100)
-  :defer t
-  :ensure)
+  :ensure t
+  :bind ("C-. j" . my/toggle-dumb-jump-order)
+  :config
+  (defvar my/dumb-jump-order 100)
+  (defun my/toggle-dumb-jump-order ()
+    "dumb-jump order in xref, useful to suppress etags prompt"
+    (interactive)
+    (remove-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+    (setq my/dumb-jump-order (- my/dumb-jump-order))
+    (add-hook 'xref-backend-functions #'dumb-jump-xref-activate my/dumb-jump-order)
+    (message "dumb-jump %s" (if (> my/dumb-jump-order 0) "as fallback" "goes first"))))
 
 (use-package dashboard
   :if (display-graphic-p)
