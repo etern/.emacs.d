@@ -23,7 +23,6 @@
 - *nyan-mode*
 - multiple-cursors
 - *dumb-jump*
-- *dashboard*
 - pdf-tools
 - expand-region
 - pyim

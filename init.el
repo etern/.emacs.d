@@ -130,6 +130,9 @@
 (mapc (lambda (ch) (modify-syntax-entry ch "." (standard-syntax-table)))
       "，。？！")
 
+(when (display-graphic-p)
+  (add-hook 'after-init-hook #'my/dashboard))
+
 (use-package org
   :custom (org-imenu-depth 4)
   (org-src-preserve-indentation t)
@@ -261,7 +264,7 @@
   (setq consult-project-root-function
         (lambda ()
           (when-let (project (project-current))
-            (car (project-roots project)))))
+            (project-root project))))
   (defun consult-line-multi-symbol-at-point ()
     (interactive)
     (consult-line-multi t (thing-at-point 'symbol))))
@@ -331,40 +334,12 @@
     (add-hook 'xref-backend-functions #'dumb-jump-xref-activate my/dumb-jump-order)
     (message "dumb-jump %s" (if (> my/dumb-jump-order 0) "as fallback" "goes first"))))
 
-(use-package dashboard
-  :if (display-graphic-p)
-  :ensure t
-  :diminish 'page-break-lines-mode
-  :config
-  (setq dashboard-startup-banner nil)
-  (defun dashboard-insert-totd (list-size)
-    (let* ((commands (seq-filter #'commandp obarray))
-           (command (nth (random (length commands)) commands)))
-      (insert (propertize "Tip of the day:\n" 'face 'dashboard-heading))
-      (insert (format "Command: %s\n\n%s\n\nInvoke with:\n\n"
-                      (symbol-name command)
-                      (documentation command)))
-      (where-is command t)))
-  (advice-add #'dashboard-refresh-buffer :after (lambda (&rest _) (poem-update)))
-  (defun dashboard-dev-tools (list-size)
-    (insert (propertize "Dev tools:\n" 'face 'dashboard-heading))
-    (insert-button "ASCII Table\n" 'follow-link t
-                   'action (lambda (_btn) (list-charset-chars 'ascii)
-                             (other-window 1)))
-    (insert-button "Calculator" 'follow-link t 'action (lambda (_) (calc))))
-  (defun dashboard-poem (list-size)
-    (insert (poem-get-formatted)))
-  (add-to-list 'dashboard-item-generators '(totd . dashboard-insert-totd))
-  (add-to-list 'dashboard-item-generators '(devtools . dashboard-dev-tools))
-  (add-to-list 'dashboard-item-generators '(poem . dashboard-poem))
-  (setq dashboard-items '((recents . 20) totd devtools poem))
-  (dashboard-setup-startup-hook))
-
 (use-package recentf
   :init (recentf-mode)
   :custom (recentf-exclude '("\\.emacs\\.d/recentf$"
                              "\\.emacs\\.d/elpa/"
-                             "\\.emacs\\.d/bookmarks$")))
+                             "\\.emacs\\.d/bookmarks$"))
+  (recentf-filename-handlers '(abbreviate-file-name)))
 
 (use-package pdf-tools
   :if (display-graphic-p)
@@ -487,9 +462,8 @@
   :config
   (defun my/dired-dim-git-ignores ()
     "Dim out .gitignore contents, folder/glob not handled"
-    (when-let ((_ (require 'vc))
-               (ignores (mapcar (lambda (s) (string-trim-right s "/"))
-                                (vc-default-ignore-completion-table 'git ".gitignore")))
+    (require 'vc)
+    (when-let ((ignores (vc-default-ignore-completion-table 'git ".gitignore"))
                (exts (make-local-variable 'completion-ignored-extensions)))
       (dolist (item ignores) (add-to-list exts item))))
   (add-hook 'dired-mode-hook #'my/dired-dim-git-ignores)

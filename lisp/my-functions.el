@@ -117,5 +117,21 @@ keyword come from `active region` or `thing-at-point`"
     (kill-new ref)
     (message (format "Copied: %s" ref))))
 
+(defun my/dashboard ()
+  "My simple dashboard"
+  (interactive)
+  (recentf-dialog "*my-dashboard*"
+    ;; recent files list
+    (apply #'widget-create
+           `(group
+             :indent 2
+             :format "\n%v\n"
+             ,@(recentf-open-files-items recentf-list)))
+    ;; poem
+    (widget-insert (poem-get-formatted))
+    (widget-forward 1))
+  (define-key recentf-dialog-mode-map "g"
+    (lambda () (interactive) (my/dashboard) (poem-update))))
+
 (provide 'my-functions)
 ;;; my-functions.el ends here
