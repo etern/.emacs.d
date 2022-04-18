@@ -369,7 +369,7 @@
   (add-to-list 'which-key-replacement-alist
                '((nil . "digit-argument") . t))
   (setq which-key-show-early-on-C-h t)
-  (setq which-key-idle-delay 3.0)
+  (setq which-key-idle-delay 2.0)
   (setq which-key-idle-secondary-delay 0))
 
 (use-package pyim
@@ -460,6 +460,7 @@
   :bind (:map dired-mode-map
               ([remap dired-summary] . which-key-show-major-mode))
   :config
+  (defalias 'dired-open-externally 'browse-url-of-dired-file)
   (defun my/dired-dim-git-ignores ()
     "Dim out .gitignore contents, folder/glob not handled"
     (require 'vc)
@@ -565,3 +566,7 @@
 (use-package anzu
   :ensure t
   :bind ([remap query-replace] . anzu-query-replace))
+
+(use-package mouse
+  :if (and (display-graphic-p) (version<= "28.1" emacs-version))
+  :init (context-menu-mode))

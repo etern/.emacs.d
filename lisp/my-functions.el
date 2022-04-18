@@ -1,8 +1,8 @@
 ;;; my-functions.el --- my functions                 -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2018  didi
+;; Copyright (C) 2018  jingxiaobing
 
-;; Author: didi <didi@AILabs>
+;; Author: jingxiaobing <jingxiaobing@gmail.com>
 ;; Keywords: abbrev
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -130,8 +130,10 @@ keyword come from `active region` or `thing-at-point`"
     ;; poem
     (widget-insert (poem-get-formatted))
     (widget-forward 1))
+  (define-key recentf-dialog-mode-map "G"
+    (lambda () (interactive) (my/dashboard) (poem-update)))
   (define-key recentf-dialog-mode-map "g"
-    (lambda () (interactive) (my/dashboard) (poem-update))))
+    (lambda () (interactive) (my/dashboard))))
 
 (provide 'my-functions)
 ;;; my-functions.el ends here
