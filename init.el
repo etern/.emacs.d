@@ -5,14 +5,12 @@
                          ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 
 (setq custom-file "~/.emacs.d/custom.el")
-(unless (file-exists-p custom-file)
-  (write-region "" nil custom-file)) ;; touch file
 (when (display-graphic-p)
   (defcustom my/netdisk-dir "c:/Users/Administrator/OneDrive"
     "Netdisk" :type 'string :group 'my)
   (defcustom my/hide-title-bar nil "Hide title bar, restart emacs to take effect"
     :type 'boolean :group 'my))
-(load custom-file)
+(load custom-file t t)
 
 ;; Bootstrap `use-package`
 (unless (package-installed-p 'use-package)
@@ -26,7 +24,7 @@
         (append '(:if) (remove :if use-package-keywords))))
 (require 'bind-key) ;; for use-package :bind
 (require 'diminish) ;; for use-package :diminish
-(setq use-package-verbose 1)
+;;(setq use-package-verbose 1)
 
 (push "~/.emacs.d/lisp" load-path)
 (set-language-environment "UTF-8")
@@ -112,7 +110,7 @@
         "."
         1))
 
-(load "my-functions.el")
+(load "my-functions.el" nil t)
 
 (global-set-key (kbd "C-x |") #'toggle-window-split)
 (global-set-key (kbd "M-k") #'kill-buffer) ; unbind kill-sentence
@@ -361,6 +359,7 @@
 
 (use-package expand-region
   :if (fboundp 'er/expand-region)
+  :custom (expand-region-show-usage-message nil)
   :bind ([remap mark-sexp] . er/expand-region)) ;; "C-M-SPC"
 
 (use-package which-key
