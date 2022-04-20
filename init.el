@@ -58,7 +58,7 @@
     (setq frame-title-format '(multiple-frames "%e" (:eval (poem-get 'content)))))
   (set-fontset-font t 'chinese-gbk (font-spec :family "Microsoft Yahei"))
   (when (member "Segoe UI Emoji" (font-family-list))
-    (set-fontset-font t 'symbol (font-spec :family "Segoe UI Emoji") nil 'prepend))
+    (set-fontset-font t 'emoji (font-spec :family "Segoe UI Emoji") nil 'prepend))
   (set-face-attribute 'mode-line nil :box nil) ;; flat mode line
   (set-face-attribute 'mode-line-inactive nil :box nil))
 
@@ -134,9 +134,11 @@
   (add-hook 'after-init-hook #'my/dashboard))
 
 (use-package org
-  :custom (org-imenu-depth 4)
+  :custom
+  (org-imenu-depth 4)
   (org-src-preserve-indentation t)
   (org-use-speed-commands t)
+  (org-html-validation-link nil)
   :hook (org-mode . (lambda () (set-fill-column 80)
                       (org-next-visible-heading 1)
                       (electric-indent-local-mode -1)))
@@ -172,6 +174,7 @@
                 (hide-mode-line-mode -1))))
   (use-package ob-plantuml)
   (use-package ox-latex
+    :defer t
     :config
     (setq org-latex-pdf-process '("xelatex -shell-escape %f"
                                   "xelatex -shell-escape %f"
