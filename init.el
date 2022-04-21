@@ -137,7 +137,7 @@
   (org-src-preserve-indentation t)
   (org-use-speed-commands t)
   (org-html-validation-link nil)
-  :hook (org-mode . (lambda () (set-fill-column 80)
+  :hook (org-mode . (lambda () (setq fill-column 80)
                       (org-next-visible-heading 1)
                       (electric-indent-local-mode -1)))
   :config
@@ -152,9 +152,10 @@
     :config
     (add-hook 'org-mode-hook #'org-download-enable)
     (setq org-download-timestamp "")) ;; don't append time string to image name
-  (use-package org-bullets
-    :init
-    (add-hook 'org-mode-hook #'org-bullets-mode))
+  (use-package org-superstar
+    :ensure t
+    :custom (org-hide-leading-stars t)
+    :hook (org-mode . org-superstar-mode))
   (use-package org-present
     :commands org-present
     :config
@@ -537,7 +538,8 @@
         ("f" . View-scroll-page-forward)))
 
 (use-package edit-indirect
-  :bind ("C-c c j" . my/journal-capture))
+  :if (display-graphic-p)
+  :bind ("C-c j" . my/journal-capture))
 
 (use-package isearch
   :if (version<= "27.1" emacs-version)
