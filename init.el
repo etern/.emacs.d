@@ -298,10 +298,6 @@
 (global-set-key (kbd "C-. d") #'my/toggle-debug)
 (global-set-key (kbd "C-. l") #'my/copy-line-ref)
 
-(use-package cmake-mode
-  :commands cmake-mode
-  :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'")) ;;add to auto-mode-alist
-
 (use-package restclient
   :mode (("\\.rest\\'" . restclient-mode)
          ("\\.http\\'" . restclient-mode)))
@@ -540,24 +536,8 @@
         ("b" . View-scroll-page-backward)
         ("f" . View-scroll-page-forward)))
 
-(use-package org-capture
-  :if (display-graphic-p)
-  :bind
-  ("C-c c" . org-capture)
-  :config
-  (setq my/journal-file (format "%s/Documents/%s" my/netdisk-dir (format-time-string "%Y.org")))
-  (defun my/journal-goto-today ()
-    (let ((heading (format-time-string "* [%Y-%m-%d %a]")))
-      (goto-char (point-max))
-      (unless (re-search-backward (regexp-quote heading) nil t)
-        (goto-char (point-max))
-        (or (bolp) (insert "\n"))
-        (insert heading "\n")) ;; TODO don't change file on cancel (C-c C-k)
-      (org-end-of-subtree)))
-  :custom
-  (org-capture-templates
-   '(("j" "Write journal" plain (file+function my/journal-file my/journal-goto-today)
-      nil :empty-lines-after 1))))
+(use-package edit-indirect
+  :bind ("C-c c j" . my/journal-capture))
 
 (use-package isearch
   :if (version<= "27.1" emacs-version)

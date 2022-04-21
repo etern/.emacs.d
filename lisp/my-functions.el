@@ -135,5 +135,24 @@ keyword come from `active region` or `thing-at-point`"
   (define-key recentf-dialog-mode-map "g"
     (lambda () (interactive) (my/dashboard))))
 
+(defun my/journal-capture ()
+  "Mimic org-capture, and better than it.
+Require package `edit-indirect'"
+    (interactive)
+    (setq my/journal-file (concat my/netdisk-dir (format-time-string "/Documents/%Y.org")))
+    (with-current-buffer (find-file-noselect my/journal-file)
+      (let ((mode-func major-mode)
+            (heading (format-time-string "* [%Y-%m-%d %a]")))
+        (goto-char (point-max))
+        (if (re-search-backward (regexp-quote heading) nil t)
+            (with-current-buffer (edit-indirect-region (point) (+ (length heading) (point)) t)
+              (funcall mode-func)
+              (insert "\n"))
+          (or (bolp) (insert "\n"))
+          (with-current-buffer (edit-indirect-region (1- (point-max)) (point-max) t)
+            (funcall mode-func)
+            (insert heading "\n"))))
+      (add-hook 'edit-indirect-after-commit-functions (lambda (&rest _) (save-buffer)))))
+
 (provide 'my-functions)
 ;;; my-functions.el ends here

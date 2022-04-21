@@ -17,7 +17,6 @@
 - *consult*
 - embark
 - /semantic/
-- cmake-mode
 - restclient
 - imenu-list
 - *nyan-mode*
@@ -32,6 +31,7 @@
 - *company*
 - treemacs
 - org-roam
+- *anzu*
 
 * Bindings
 - ~C-x |~ Toggle vertical/horizontal window split
