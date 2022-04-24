@@ -128,8 +128,9 @@ keyword come from `active region` or `thing-at-point`"
              :format "\n%v\n"
              ,@(recentf-open-files-items recentf-list)))
     ;; poem
-    (widget-insert (poem-get-formatted))
-    (widget-forward 1))
+    (widget-insert (poem-get-formatted) ?\n)
+    (widget-move 1 t))
+  (define-key recentf-dialog-mode-map "e" #'recentf-edit-list)
   (define-key recentf-dialog-mode-map "G"
     (lambda () (interactive) (my/dashboard) (poem-update)))
   (define-key recentf-dialog-mode-map "g"

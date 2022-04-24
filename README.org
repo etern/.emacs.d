@@ -3,7 +3,7 @@
 #+OPTIONS: num:nil ^:{}
 
 * Packages
-- org
+- /org/
   - org-download
   - *org-superstar*
   - *org-present*
@@ -16,7 +16,6 @@
   - marginalia
 - *consult*
 - embark
-- /semantic/
 - restclient
 - imenu-list
 - *nyan-mode*

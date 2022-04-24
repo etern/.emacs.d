@@ -333,7 +333,7 @@
     (message "dumb-jump %s" (if (> my/dumb-jump-order 0) "as fallback" "goes first"))))
 
 (use-package recentf
-  :init (recentf-mode)
+  :init (let ((inhibit-message t)) (recentf-mode))
   :custom (recentf-exclude '("\\.emacs\\.d/recentf$"
                              "\\.emacs\\.d/elpa/"
                              "\\.emacs\\.d/bookmarks$"))
@@ -432,7 +432,9 @@
          (shell-mode . company-mode)
          (eshell-mode . company-mode))
   :custom
-  (company-transformers '(company-sort-by-occurrence
+  (company-backends '((company-capf company-dabbrev-code) company-files))
+  (company-transformers '(delete-consecutive-dups
+                          company-sort-by-occurrence
                           company-sort-prefer-same-case-prefix)))
 
 (use-package treemacs
