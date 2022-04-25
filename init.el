@@ -469,6 +469,10 @@
                (exts (make-local-variable 'completion-ignored-extensions)))
       (dolist (item ignores) (add-to-list exts item))))
   (add-hook 'dired-mode-hook #'my/dired-dim-git-ignores)
+  (let ((datetime (rx (? (= 4 digit) "-") (= 2 digit) "-" (= 2 digit)
+                      " " (= 2 digit) ":" (= 2 digit))))
+    (font-lock-add-keywords 'dired-mode `((,datetime . 'dired-ignored)
+                                          (,user-login-name . 'dired-ignored))))
   (unbind-key "M-s f" dired-mode-map)) ;; "M-s f" is taken by consult-find
 
 (use-package helpful
@@ -500,9 +504,7 @@
   (setf (alist-get 'c-mode c-default-style) "mine"
         (alist-get 'c++-mode c-default-style) "mine")
   (add-hook 'c-mode-common-hook
-            (lambda ()
-              (abbrev-mode -1)
-              (global-set-key (kbd "<f7>") #'compile))))
+            (lambda () (abbrev-mode -1))))
 
 (use-package python
   :defer t
@@ -513,8 +515,7 @@
   (add-hook 'python-mode-hook
             (lambda ()
               (setq tab-width 4)
-              (set (make-local-variable 'compile-command)
-                   (concat "python " buffer-file-name))))
+              (setq-local compile-command (concat "python " buffer-file-name))))
   (add-hook 'inferior-python-mode-hook
             (lambda ()
               (setq comint-input-ring-file-name "~/.emacs.d/.python.hist")
@@ -547,7 +548,8 @@
   :if (version<= "27.1" emacs-version)
   :bind (:map isearch-mode-map
          ([remap isearch-delete-char] . isearch-del-char))
-  :custom (isearch-lazy-count t))
+  :custom (isearch-lazy-count t)
+  (isearch-allow-motion t))
 
 (use-package anzu
   :ensure t
