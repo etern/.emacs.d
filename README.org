@@ -57,6 +57,7 @@
 - ~C-c j~ my/journal-capture +org-capture+
 - ~M-h/H~ previous-buffer/next-buffer
 - ~M-k~ kill-this-buffer
+- ~l~ dired-up-directory (dired-mode)
 
 * customize-variable
 - org-roam-directory

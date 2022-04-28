@@ -110,7 +110,7 @@
         "."
         1))
 
-(load "my-functions.el" nil t)
+(require 'my-functions)
 
 (global-set-key (kbd "C-x |") #'toggle-window-split)
 (global-set-key (kbd "M-k") #'kill-buffer) ; unbind kill-sentence
@@ -459,6 +459,7 @@
   (dired-dwim-target t)
   (dired-kill-when-opening-new-dired-buffer t)
   :bind (:map dired-mode-map
+              ("l" . dired-up-directory) ;; pretending 'back history', like in Info-mode
               ([remap dired-summary] . which-key-show-major-mode))
   :config
   (defalias 'dired-open-externally 'browse-url-of-dired-file)
@@ -469,10 +470,13 @@
                (exts (make-local-variable 'completion-ignored-extensions)))
       (dolist (item ignores) (add-to-list exts item))))
   (add-hook 'dired-mode-hook #'my/dired-dim-git-ignores)
-  (let ((datetime (rx (? (= 4 digit) "-") (= 2 digit) "-" (= 2 digit)
-                      " " (= 2 digit) ":" (= 2 digit))))
-    (font-lock-add-keywords 'dired-mode `((,datetime . 'dired-ignored)
-                                          (,user-login-name . 'dired-ignored))))
+  ;; Dim out user & time (time-style can be iso, long-iso)
+  (let* ((date (rx (? (= 4 digit) "-") (regex "[01][0-9]-[0-3][0-9]")))
+         (datetime (concat date " [0-2][0-9]:[0-5][0-9]")))
+    (font-lock-add-keywords
+     'dired-mode `((,datetime . 'dired-ignored)
+                   (,date . 'dired-ignored)
+                   (,user-login-name . 'dired-ignored)) t))
   (unbind-key "M-s f" dired-mode-map)) ;; "M-s f" is taken by consult-find
 
 (use-package helpful
