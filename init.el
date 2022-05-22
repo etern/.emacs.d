@@ -141,12 +141,20 @@
                       (org-next-visible-heading 1)
                       (electric-indent-local-mode -1)))
   :config
+  (defadvice org-babel-execute-src-block (around load-language nil activate)
+    "Load ob-{language} only when needed."
+    (let ((lang (org-element-property :language (org-element-at-point))))
+      (when (or (string= lang "bash") (string= lang "sh")) (setq lang "shell"))
+      (unless (cdr (assoc (intern lang) org-babel-load-languages))
+        (add-to-list 'org-babel-load-languages (cons (intern lang) t))
+        (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages))
+      ad-do-it))
   (require 'org-tempo) ;; use `<s` to expand src_block
   (use-package display-fill-column-indicator
     :if (not (version< emacs-version "27"))
     :hook (org-mode . display-fill-column-indicator-mode))
   (use-package org-download
-    :if (display-graphic-p)
+    :if (and (fboundp 'org-download-enable) (display-graphic-p))
     :init
     (setq org-download-image-dir "./org-download-images") ;; this dir will be auto-created
     :config
