@@ -405,31 +405,14 @@
   (show-paren-when-point-inside-paren t)
   (show-paren-when-point-in-periphery t))
 
-(use-package lsp-pyright
-  :defer t
-  :hook (python-mode . (lambda ()
-                         (if (require 'lsp-pyright nil 'noerror)
-                             (lsp)
-                           (message "lsp-pyright not installed, ignore")))))
-
-(use-package lsp-mode
-  :defer t
-  :init
-  (setq lsp-keymap-prefix "C-c p")
-  :diminish eldoc-mode
-  :custom
-  (lsp-imenu-index-symbol-kinds '(Class Function Interface Enum Method Constuctor Operator TypeParameter Field Struct Property))
+(use-package eglot
+  :hook (python-mode . eglot-ensure)
+  :bind (:map eglot-mode-map ("C-c p r" . eglot-rename))
+  :custom (eglot-events-buffer-size 0)
   :config
-  (use-package flymake :diminish)
-  (setq lsp-enable-snippet nil)
-  ;; diminish signature message in minibuffer
-  (setq lsp-signature-render-documentation nil)
-  (setq lsp-signature-auto-activate nil)
-  ;; Performance tuning
-  (setq gc-cons-threshold 100000000)
-  (setq read-process-output-max (* 1024 1024)) ;; 1mb
-  (setq lsp-completion-provider :capf)
-  (setq lsp-log-io nil))
+  ;;https://github.com/joaotavora/eglot/issues/454#issuecomment-642978840
+  (define-key eglot-mode-map [remap display-local-help] nil)
+  (diminish 'flymake-mode flymake-mode-line-counters))
 
 (use-package company
   :ensure t
