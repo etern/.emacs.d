@@ -179,7 +179,6 @@
                 (org-present-small)
                 (org-remove-inline-images)
                 (hide-mode-line-mode -1))))
-  (use-package ob-plantuml)
   (use-package ox-latex
     :defer t
     :config
@@ -357,10 +356,10 @@
   :config
   (add-hook 'pdf-view-mode-hook
             (lambda ()
-              (progn (pdf-isearch-minor-mode)
-                     (pdf-annot-minor-mode)
-                     (pdf-outline-minor-mode)
-                     (pdf-misc-context-menu-minor-mode)))))
+              (pdf-isearch-minor-mode)
+              (pdf-annot-minor-mode)
+              (pdf-outline-minor-mode)
+              (pdf-misc-context-menu-minor-mode))))
 
 (use-package expand-region
   :if (fboundp 'er/expand-region)
@@ -408,7 +407,9 @@
 (use-package eglot
   :hook (python-mode . eglot-ensure)
   :bind (:map eglot-mode-map ("C-c p r" . eglot-rename))
-  :custom (eglot-events-buffer-size 0)
+  :custom
+  (eglot-events-buffer-size 0)
+  (eldoc-echo-area-use-multiline-p 1)
   :config
   ;;https://github.com/joaotavora/eglot/issues/454#issuecomment-642978840
   (define-key eglot-mode-map [remap display-local-help] nil)

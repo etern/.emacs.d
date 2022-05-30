@@ -8,7 +8,6 @@
   - *org-superstar*
   - *org-present*
     - *hide-mode-line*
-  - /ob-plantuml/
 - *avy*
 - *ace-window*
 - magit
