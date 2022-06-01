@@ -24,12 +24,12 @@
 - expand-region
 - pyim
 - *which-key*
-- lsp-mode
-- lsp-pyright
+- eglot
 - *company*
 - treemacs
 - org-roam
 - *anzu*
+- citre
 
 * Bindings
 - ~C-x |~ Toggle vertical/horizontal window split

@@ -502,6 +502,17 @@
   (add-hook 'c-mode-common-hook
             (lambda () (abbrev-mode -1))))
 
+(use-package citre
+  :init (autoload 'citre-mode "citre" nil t)
+  :hook ((c++-mode . citre-mode)
+         (c-mode . citre-mode))
+  :config
+  (defun my/filter-imenu (imenu-alist)
+    (seq-filter (lambda (item)
+                  (member (car item) '("function" "class" "struct" "member" "variable" "typedef")))
+                imenu-alist))
+  (advice-add 'citre-imenu-create-index-function :filter-return #'my/filter-imenu))
+
 (use-package python
   :defer t
   :config
