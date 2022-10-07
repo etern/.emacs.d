@@ -90,6 +90,7 @@
 
   (use-package exec-path-from-shell
     :ensure t
+    :custom (exec-path-from-shell-arguments '("-l"))
     :init (exec-path-from-shell-initialize)
     :config (exec-path-from-shell-copy-env "PS1"))
 
