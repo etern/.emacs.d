@@ -270,7 +270,7 @@
    consult-ripgrep consult-xref
    consult--source-recent-file consult--source-project-recent-file
    consult--source-bookmark
-   :preview-key (kbd "M-."))
+   :preview-key "M-.")
   (setq consult-project-root-function
         (lambda ()
           (when-let (project (project-current))
