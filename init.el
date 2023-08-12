@@ -15,15 +15,13 @@
 ;; Bootstrap `use-package`
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
-  (package-install 'use-package)
-  (package-install 'diminish))
+  (package-install 'use-package))
 
 (eval-when-compile
   (require 'use-package)
   (setq use-package-keywords ;; precedence  :if > :ensure
         (append '(:if) (remove :if use-package-keywords))))
-(require 'bind-key) ;; for use-package :bind
-(require 'diminish) ;; for use-package :diminish
+(use-package diminish :ensure t) ;; for use-package :diminish
 ;;(setq use-package-verbose 1)
 
 (push "~/.emacs.d/lisp" load-path)
@@ -115,6 +113,7 @@
 
 (global-set-key (kbd "C-x |") #'toggle-window-split)
 (global-set-key (kbd "M-k") #'kill-buffer) ; unbind kill-sentence
+(global-set-key (kbd "M-K") #'delete-window)
 (global-set-key (kbd "M-h") #'previous-buffer) ; unbind mark-paragraph
 (global-set-key (kbd "M-H") #'next-buffer)
 (global-set-key [remap kill-buffer] #'kill-this-buffer)
@@ -566,3 +565,7 @@
 (use-package mouse
   :if (and (display-graphic-p) (version<= "28.1" emacs-version))
   :init (context-menu-mode))
+
+(use-package pixel-scroll
+  :if (and (version<= "29.1" emacs-version) (display-graphic-p))
+  :init (pixel-scroll-precision-mode))

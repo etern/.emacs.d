@@ -56,6 +56,7 @@
 - ~C-c j~ my/journal-capture +org-capture+
 - ~M-h/H~ previous-buffer/next-buffer
 - ~M-k~ kill-this-buffer
+- ~M-K~ delete-window
 - ~l~ dired-up-directory (dired-mode)
 
 * customize-variable
