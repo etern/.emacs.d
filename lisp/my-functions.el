@@ -55,41 +55,6 @@
          (eval . (message \"executed\")))) ;; `eval` pseudo-variable for evaluation
  (c-mode . ((fill-column . 50))))")
 
-(defvar poem-file "~/.emacs.d/.poem.json")
-(defvar poem-cache nil)
-
-(defun poem-update ()
-  "Download poem asynchronously from `jinrishici.com`"
-  (let ((url-request-extra-headers
-	 '(("X-User-Token" . "4xXGMG62BsykCCHWmj7ik4y2Z9bkiJ3T"))))
-    (ignore-errors
-      (url-retrieve
-       "https://v2.jinrishici.com/sentence"
-       (lambda (status)
-	 (write-region url-http-end-of-headers (point-max) poem-file)
-         (setq poem-cache nil))))))
-
-(defun poem-get (prop)
-  "Get poem from cache file, PROP can be 'content, 'origin"
-  (ignore-errors
-    (if poem-cache
-        (alist-get prop poem-cache)
-      (with-temp-buffer
-        (insert-file-contents poem-file)
-        (let ((data (alist-get 'data (json-read))))
-          (setq poem-cache data)
-          (alist-get prop data))))))
-
-(defun poem-get-formatted ()
-  (let* ((poem (poem-get 'origin))
-         (lines (alist-get 'content poem))
-         (content (mapconcat #'identity lines "\n")))
-    (format "%s\n%s · %s\n%s"
-            (alist-get 'title poem)
-            (alist-get 'dynasty poem)
-            (alist-get 'author poem)
-            content)))
-
 (defun my/bing-search (text)
   "use browser bing.com search keyword
 keyword come from `active region` or `thing-at-point`"
@@ -117,6 +82,8 @@ keyword come from `active region` or `thing-at-point`"
     (kill-new ref)
     (message (format "Copied: %s" ref))))
 
+(require 'poetry)
+
 (defun my/dashboard ()
   "My simple dashboard"
   (interactive)
@@ -128,11 +95,11 @@ keyword come from `active region` or `thing-at-point`"
              :format "\n%v\n"
              ,@(recentf-open-files-items recentf-list)))
     ;; poem
-    (widget-insert (poem-get-formatted) ?\n)
+    (widget-insert (poetry-get-formatted) ?\n)
     (widget-move 1 t))
   (define-key recentf-dialog-mode-map "e" #'recentf-edit-list)
   (define-key recentf-dialog-mode-map "G"
-    (lambda () (interactive) (my/dashboard) (poem-update)))
+    (lambda () (interactive) (my/dashboard) (poetry-update)))
   (define-key recentf-dialog-mode-map "g"
     (lambda () (interactive) (my/dashboard))))
 

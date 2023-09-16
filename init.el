@@ -51,7 +51,7 @@
   (if my/hide-title-bar
       (setq default-frame-alist '((undecorated . t) (drag-internal-border . 1)
                                   (internal-border-width . 5)))
-    (setq frame-title-format '(multiple-frames "%e" (:eval (poem-get 'content)))))
+    (setq frame-title-format '(multiple-frames "%e" (:eval (poetry-get 'content)))))
   (set-fontset-font t 'chinese-gbk (font-spec :family "Microsoft Yahei"))
   (when (member "Segoe UI Emoji" (font-family-list))
     (set-fontset-font t 'emoji (font-spec :family "Segoe UI Emoji") nil 'prepend))
