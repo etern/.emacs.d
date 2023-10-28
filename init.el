@@ -41,6 +41,7 @@
 (savehist-mode)
 (add-hook 'prog-mode-hook
           (lambda ()
+            (setq-local show-trailing-whitespace t)
             (setq eldoc-minor-mode-string nil)
             (setq indent-tabs-mode nil)))
 
@@ -569,3 +570,15 @@
 (use-package pixel-scroll
   :if (and (version<= "29.1" emacs-version) (display-graphic-p))
   :init (pixel-scroll-precision-mode))
+
+(use-package nerd-icons
+  :if (require 'nerd-icons nil 'noerror)
+  :config
+  (use-package nerd-icons-completion
+    :ensure t
+    :config (nerd-icons-completion-mode))
+  (use-package nerd-icons-dired
+    :ensure t
+    :diminish nerd-icons-dired-mode
+    :hook (dired-mode . nerd-icons-dired-mode)))
+

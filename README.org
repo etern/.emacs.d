@@ -30,6 +30,7 @@
 - org-roam
 - *anzu*
 - citre
+- nerd-icons
 
 * Bindings
 - ~C-x |~ Toggle vertical/horizontal window split

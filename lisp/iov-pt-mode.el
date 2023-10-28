@@ -70,15 +70,15 @@
 (setq iov-pt-keywords
       `(("#.*" . font-lock-comment-face)
         (,(rx (group (+ (in "A-Z_")))
-	          (group (regexp "=>[0-9.]+=>")))
-	     (1 font-lock-type-face)
-	     (2 font-lock-string-face))
-	    (,(rx (group (+ (in "a-zA-Z_0-9")))
-	          (group "," digit ",")
-	          (group (in "01") ";"))
-	     (1 'default)
-	     (2 font-lock-string-face)
-	     (3 font-lock-constant-face))))
+	      (group (regexp "=>[0-9.]+=>")))
+	 (1 font-lock-type-face)
+	 (2 font-lock-string-face))
+	(,(rx (group (+ (in "a-zA-Z_0-9")))
+	      (group "," digit ",")
+	      (group (in "01") ";"))
+	 (1 'default)
+	 (2 font-lock-string-face)
+	 (3 font-lock-constant-face))))
 
 ;;;###autoload
 (define-derived-mode iov-pt-mode fundamental-mode "iov-pt"
