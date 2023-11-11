@@ -25,6 +25,7 @@
 ;;(setq use-package-verbose 1)
 
 (push "~/.emacs.d/lisp" load-path)
+(require 'my-functions)
 (set-language-environment "UTF-8")
 
 (setq ring-bell-function 'ignore)
@@ -109,8 +110,6 @@
         "[:space:]" ;; github render '" not supported
         "."
         1))
-
-(require 'my-functions)
 
 (global-set-key (kbd "C-x |") #'toggle-window-split)
 (global-set-key (kbd "M-k") #'kill-buffer) ; unbind kill-sentence

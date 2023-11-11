@@ -99,9 +99,8 @@ keyword come from `active region` or `thing-at-point`"
     (widget-move 1 t))
   (define-key recentf-dialog-mode-map "e" #'recentf-edit-list)
   (define-key recentf-dialog-mode-map "G"
-    (lambda () (interactive) (my/dashboard) (poetry-update)))
-  (define-key recentf-dialog-mode-map "g"
-    (lambda () (interactive) (my/dashboard))))
+              (lambda () (interactive) (poetry-update) (my/dashboard)))
+  (define-key recentf-dialog-mode-map "g" #'my/dashboard))
 
 (defun my/journal-capture ()
   "Mimic org-capture, and better than it.
@@ -121,6 +120,38 @@ Require package `edit-indirect'"
             (funcall mode-func)
             (insert heading "\n"))))
       (add-hook 'edit-indirect-after-commit-functions (lambda (&rest _) (save-buffer)))))
+
+;; z/zi like in zoxide, adapted from
+;; https://karthinks.com/software/jumping-directories-in-eshell/
+(defun eshell/z (&optional regexp)
+  "Navigate to a recent directory or subdirectory, in eshell."
+  ;;todo: `regexp' might be expanded already (~ -> /home/my)
+  (let ((dir (eshell-find-previous-directory regexp)))
+    (cond
+     ((member regexp '("~" "-" ".." "." "/")) (eshell/cd regexp))
+     (dir (eshell/cd dir))  ;; z to recent dirs
+     (t (eshell/cd regexp)))))  ;; maybe z to subdirs of pwd
+
+(defun eshell/zi (&optional regexp)
+  "Interactivly navigate to a recent directory in eshell, or to
+any directory preferred by `consult-dir'."
+  (let ((eshell-dirs (delete-dups
+                      (mapcar 'abbreviate-file-name
+                              (ring-elements eshell-last-dir-ring)))))
+    (cond
+     (regexp (eshell/z regexp))
+     ((featurep 'consult-dir)
+      (let* ((consult-dir--source-eshell
+              `(:name "Eshell"
+                      :narrow ?e
+                      :category file
+                      :face consult-file
+                      :items ,eshell-dirs))
+             (consult-dir-sources (cons consult-dir--source-eshell
+                                        consult-dir-sources)))
+        (eshell/cd (substring-no-properties
+                    (consult-dir--pick "Switch directory: ")))))
+     (t (eshell/cd (completing-read "cd: " eshell-dirs))))))
 
 (provide 'my-functions)
 ;;; my-functions.el ends here
