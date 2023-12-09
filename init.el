@@ -132,6 +132,7 @@
 (setq mode-line-percent-position nil
       mode-line-position-column-line-format '(" %l:%c")
       mode-line-modes (remove "(" (remove ")" mode-line-modes))
+      mode-line-frame-identification "  "
       eol-mnemonic-unix " LF "
       eol-mnemonic-dos " CRLF ")
 (setf (car mode-line-remote) " "

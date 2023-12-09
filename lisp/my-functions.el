@@ -159,7 +159,7 @@ any directory preferred by `consult-dir'."
   (let ((s (symbol-name (coding-system-base coding-system))))
     (cond
      ((string-prefix-p "no-conversion" s) "BINARY")
-     ((eq "undecided" s) "UTF-8")
+     ((equal "undecided" s) "UTF-8")
      (t (upcase (replace-regexp-in-string "^\\(prefer-\\|chinese-\\)" "" s))))))
 
 (provide 'my-functions)
