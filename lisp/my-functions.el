@@ -21,30 +21,30 @@
 ;;; Commentary:
 
 ;;
-(defun toggle-window-split ()
+(defun my/toggle-window-split ()
   (interactive)
-  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-	     (next-win-buffer (window-buffer (next-window)))
-	     (this-win-edges (window-edges (selected-window)))
-	     (next-win-edges (window-edges (next-window)))
-	     (this-win-2nd (not (and (<= (car this-win-edges)
-					 (car next-win-edges))
-				     (<= (cadr this-win-edges)
-					 (cadr next-win-edges)))))
-	     (splitter
-	      (if (= (car this-win-edges)
-		     (car (window-edges (next-window))))
-		  'split-window-horizontally
-		'split-window-vertically)))
-	(delete-other-windows)
-	(let ((first-win (selected-window)))
-	  (funcall splitter)
-	  (if this-win-2nd (other-window 1))
-	  (set-window-buffer (selected-window) this-win-buffer)
-	  (set-window-buffer (next-window) next-win-buffer)
-	  (select-window first-win)
-	  (if this-win-2nd (other-window 1))))))
+  (when (= (count-windows) 2)
+    (let* ((this-win-buffer (window-buffer))
+	   (next-win-buffer (window-buffer (next-window)))
+	   (this-win-edges (window-edges (selected-window)))
+	   (next-win-edges (window-edges (next-window)))
+	   (this-win-2nd (not (and (<= (car this-win-edges)
+				       (car next-win-edges))
+				   (<= (cadr this-win-edges)
+				       (cadr next-win-edges)))))
+	   (splitter
+	    (if (= (car this-win-edges)
+		   (car (window-edges (next-window))))
+		'split-window-horizontally
+	      'split-window-vertically)))
+      (delete-other-windows)
+      (let ((first-win (selected-window)))
+	(funcall splitter)
+	(if this-win-2nd (other-window 1))
+	(set-window-buffer (selected-window) this-win-buffer)
+	(set-window-buffer (next-window) next-win-buffer)
+	(select-window first-win)
+	(if this-win-2nd (other-window 1))))))
 
 ;;; Code:
 
@@ -87,7 +87,7 @@ keyword come from `active region` or `thing-at-point`"
 (defun my/dashboard ()
   "My simple dashboard"
   (interactive)
-  (recentf-dialog "*my-dashboard*"
+  (recentf-dialog "*dashboard*"
     ;; recent files list
     (apply #'widget-create
            `(group
@@ -96,7 +96,8 @@ keyword come from `active region` or `thing-at-point`"
              ,@(recentf-open-files-items recentf-list)))
     ;; poem
     (widget-insert (poetry-get-formatted) ?\n)
-    (widget-move 1 t))
+    (widget-move 1 t)
+    (setq buffer-read-only t))
   (define-key recentf-dialog-mode-map "e" #'recentf-edit-list)
   (define-key recentf-dialog-mode-map "G"
               (lambda () (interactive) (poetry-update) (my/dashboard)))
@@ -152,6 +153,14 @@ any directory preferred by `consult-dir'."
         (eshell/cd (substring-no-properties
                     (consult-dir--pick "Switch directory: ")))))
      (t (eshell/cd (completing-read "cd: " eshell-dirs))))))
+
+(defun my/coding-string (coding-system)
+  "Get coding system string, for pretty print"
+  (let ((s (symbol-name (coding-system-base coding-system))))
+    (cond
+     ((string-prefix-p "no-conversion" s) "BINARY")
+     ((eq "undecided" s) "UTF-8")
+     (t (upcase (replace-regexp-in-string "^\\(prefer-\\|chinese-\\)" "" s))))))
 
 (provide 'my-functions)
 ;;; my-functions.el ends here

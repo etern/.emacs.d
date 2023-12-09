@@ -111,7 +111,7 @@
         "."
         1))
 
-(global-set-key (kbd "C-x |") #'toggle-window-split)
+(global-set-key (kbd "C-x |") #'my/toggle-window-split)
 (global-set-key (kbd "M-k") #'kill-buffer) ; unbind kill-sentence
 (global-set-key (kbd "M-K") #'delete-window)
 (global-set-key (kbd "M-h") #'previous-buffer) ; unbind mark-paragraph
@@ -127,6 +127,24 @@
 ;; make (symbol-at-point) break at chinese punctuation
 (mapc (lambda (ch) (modify-syntax-entry ch "." (standard-syntax-table)))
       "，。？！")
+
+;; concise & descriptive mode-line
+(setq mode-line-percent-position nil
+      mode-line-position-column-line-format '(" %l:%c")
+      mode-line-modes (remove "(" (remove ")" mode-line-modes))
+      eol-mnemonic-unix " LF "
+      eol-mnemonic-dos " CRLF ")
+(setf (car mode-line-remote) " "
+      (car mode-line-modified) " "  ; RW/RO
+      (nth 1 mode-line-modified)  ; buffer modified
+      '(:eval (if (and (not buffer-read-only) (buffer-modified-p))
+                  (propertize "*" 'face 'error) " ")))
+(setf (nth 2 mode-line-mule-info)
+      '(:eval (propertize
+               (my/coding-string buffer-file-coding-system)
+               'help-echo 'mode-line-mule-info-help-echo
+               'mouse-face 'mode-line-highlight
+               'local-map mode-line-coding-system-map)))
 
 (when (display-graphic-p)
   (add-hook 'after-init-hook #'my/dashboard))
