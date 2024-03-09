@@ -338,6 +338,7 @@
   :init (nyan-mode))
 
 (use-package multiple-cursors
+  :ensure t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
@@ -468,7 +469,7 @@
 (use-package dired
   :custom
   (dired-dwim-target t)
-  (dired-kill-when-opening-new-dired-buffer t)
+  ;;(dired-kill-when-opening-new-dired-buffer t)
   :bind (:map dired-mode-map
               ("l" . dired-up-directory) ;; pretending 'back history', like in Info-mode
               ([remap dired-summary] . which-key-show-major-mode))
@@ -554,8 +555,12 @@
 (use-package elec-pair
   :hook (prog-mode . electric-pair-local-mode)
   :config
-  (setq electric-pair-skip-whitespace nil
-        electric-pair-inhibit-predicate #'electric-pair-conservative-inhibit))
+  (setq electric-pair-skip-whitespace nil ;; may not work, some mode change it
+        electric-pair-skip-whitespace-chars '(?\t ?\s)
+        electric-pair-inhibit-predicate
+        (lambda (c) (or (eq (char-syntax (following-char)) ?\")
+                        (electric-pair-conservative-inhibit c)
+                        (electric-pair-inhibit-if-helps-balance c)))))
 
 (use-package view
   :init (setq view-read-only t) ;; C-x C-q
@@ -600,3 +605,9 @@
     :diminish nerd-icons-dired-mode
     :hook (dired-mode . nerd-icons-dired-mode)))
 
+(use-package orderless
+  :ensure t
+  :init
+  (setq completion-styles '(orderless basic flex)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
