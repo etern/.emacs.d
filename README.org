@@ -3,34 +3,31 @@
 #+OPTIONS: num:nil ^:{}
 
 * Packages
-- /org/
-  - org-download
-  - *org-superstar*
-  - *org-present*
-    - *hide-mode-line*
+** Editing enhancement
 - *avy*
 - *ace-window*
-- magit
-- *vertico*
-  - marginalia
-- *consult*
-- embark
-- restclient
-- imenu-list
-- *nyan-mode*
-- multiple-cursors
-- *dumb-jump*
-- pdf-tools
-- expand-region
-- pyim
-- *which-key*
-- eglot
-- *company*
-- treemacs
-- org-roam
 - *anzu*
-- citre
+- *vertico*
+- *consult*
+- *multiple-cursors*
+- *dumb-jump*
+- *which-key*
+- *company*
+- expand-region
+- embark
+- imenu-list
+- treemacs
 - nerd-icons
+- marginalia
+
+** Towards IDE
+eglot, dape, breadcrumb, project, flymake
+
+** Org
+org-superstar, org-present, org-roam, ox-latex
+
+** Tools
+restclient, magit, pdf-tools
 
 * Bindings
 - ~C-x |~ Toggle vertical/horizontal window split
@@ -40,7 +37,6 @@
 - ~M-s g~ consult-git-grep
 - ~M-s f~ consult-find
 - ~M-s l~ consult-line-multi
-- ~C-<f8>~ Toggle imenu list
 - ~<f7>~ Compile (c/python)
 - ~C-x g~ Magit
 - ~C-M-SPC~ expand-region

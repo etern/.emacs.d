@@ -59,6 +59,8 @@
     (set-fontset-font t 'emoji (font-spec :family "Segoe UI Emoji") nil 'prepend))
   (set-face-attribute 'mode-line nil :box nil) ;; flat mode line
   (set-face-attribute 'mode-line-inactive nil :box nil))
+  (when (member "Symbols Nerd Font Mono" (font-family-list))
+    (set-fontset-font t '(#xe000 . #xf8ff) "Symbols Nerd Font Mono"))
 
 (when (eq system-type 'windows-nt)
   (setq default-directory "~/")
@@ -91,8 +93,13 @@
   (use-package exec-path-from-shell
     :ensure t
     :custom (exec-path-from-shell-arguments '("-l"))
-    :init (exec-path-from-shell-initialize)
-    :config (exec-path-from-shell-copy-env "PS1"))
+    :config
+    (add-to-list 'exec-path-from-shell-variables "PS1")
+    (exec-path-from-shell-initialize)
+    (defun my/exec-path-init ()
+      (interactive)
+      (let ((exec-path-from-shell-arguments '("-l" "-i")))
+        (exec-path-from-shell-initialize))))
 
   ;; not lose focus when execute `plantuml.jar`
   (setenv "JAVA_TOOL_OPTIONS" "-Djava.awt.headless=true")
@@ -157,6 +164,7 @@
   (org-use-speed-commands t)
   (org-html-validation-link nil)
   :hook (org-mode . (lambda () (setq fill-column 80)
+                      (setq indent-tabs-mode nil)
                       (org-next-visible-heading 1)
                       (electric-indent-local-mode -1)))
   :config
@@ -213,6 +221,10 @@
   (when (display-graphic-p)
     (setq org-image-actual-width nil) ;; to show resized image
     (plist-put org-format-latex-options :scale 1.5) ;; LaTeX preview
+    (let ((png (cdr (assoc 'dvipng org-preview-latex-process-alist)))) ;; use abs path: %F
+      (plist-put png :latex-compiler '("latex -interaction nonstopmode -output-directory %o %F"))
+      (plist-put png :image-converter '("dvipng -D %D -T tight -o %O %F"))
+      (plist-put png :transparent-image-converter '("dvipng -D %D -T tight -bg Transparent -o %O %F")))
     (set-face-attribute 'org-table nil
                         :fontset (create-fontset-from-fontset-spec
                                   "-*-*-*-*-*--*-*-*-*-*-*-fontset-orgtable, han:宋体:size=16")))
@@ -332,11 +344,6 @@
 (use-package imenu-list
   :bind ("C-<f8>" . imenu-list-smart-toggle))
 
-(use-package nyan-mode
-  :if (display-graphic-p)
-  :ensure t
-  :init (nyan-mode))
-
 (use-package multiple-cursors
   :ensure t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
@@ -425,11 +432,17 @@
   (show-paren-when-point-in-periphery t))
 
 (use-package eglot
-  :hook (python-mode . eglot-ensure)
-  :bind (:map eglot-mode-map ("C-c p r" . eglot-rename))
+  :hook ((python-mode . eglot-ensure)
+         (c-mode . eglot-ensure)
+         (c++-mode . eglot-ensure))
+  :bind (:map eglot-mode-map
+              ("C-c p r" . eglot-rename)
+              ("M-RET" . eglot-code-actions))
   :custom
   (eglot-events-buffer-size 0)
   (eldoc-echo-area-use-multiline-p 1)
+  (eglot-menu-string "")
+  (eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider))
   :config
   ;;https://github.com/joaotavora/eglot/issues/454#issuecomment-642978840
   (define-key eglot-mode-map [remap display-local-help] nil)
@@ -522,17 +535,6 @@
   (add-hook 'c-mode-common-hook
             (lambda () (abbrev-mode -1))))
 
-(use-package citre
-  :init (autoload 'citre-mode "citre" nil t)
-  :hook ((c++-mode . citre-mode)
-         (c-mode . citre-mode))
-  :config
-  (defun my/filter-imenu (imenu-alist)
-    (seq-filter (lambda (item)
-                  (member (car item) '("function" "class" "struct" "member" "variable" "typedef")))
-                imenu-alist))
-  (advice-add 'citre-imenu-create-index-function :filter-return #'my/filter-imenu))
-
 (use-package python
   :defer t
   :config
@@ -591,7 +593,12 @@
   :init (context-menu-mode))
 
 (use-package pixel-scroll
-  :if (and (version<= "29.1" emacs-version) (display-graphic-p))
+  :if (version<= "29.1" emacs-version)
+  :bind
+  ([remap scroll-up-command] . pixel-scroll-interpolate-down)
+  ([remap scroll-down-command] . pixel-scroll-interpolate-up)
+  :custom
+  (pixel-scroll-precision-interpolate-page t)
   :init (pixel-scroll-precision-mode))
 
 (use-package nerd-icons
@@ -611,3 +618,33 @@
   (setq completion-styles '(orderless basic flex)
         completion-category-defaults nil
         completion-category-overrides '((file (styles partial-completion)))))
+
+(use-package project
+  :defer t
+  :bind (("<f5>" . project-async-shell-command))
+  :custom (project-vc-extra-root-markers '(".idea"))
+  (project-switch-commands '((project-find-file "Find file")
+                             (consult-ripgrep "Ripgrep" ?r)
+                             (project-dired "Dired" ?d)
+                             (magit "Magit" ?m))))
+
+(use-package flymake
+  :custom (flymake-mode-line-lighter ""))
+
+(use-package pdf-view-pagemark
+  :custom (pdf-view-pagemark-timeout 2)
+  :hook (pdf-view-mode . pdf-view-pagemark-mode))
+
+(use-package dape
+  :defer t
+  :config
+  (bind-key "<f10>" #'dape-next)
+  (bind-key "<f11>" #'dape-step-in)
+  (bind-key "<f9>" #'dape-breakpoint-toggle)
+  (add-hook 'dape-on-start-hooks (lambda () (save-some-buffers t t))))
+
+(use-package breadcrumb
+  :ensure t
+  :hook ((python-mode . breadcrumb-local-mode)
+         (c-mode . breadcrumb-local-mode)
+         (c++-mode . breadcrumb-local-mode)))

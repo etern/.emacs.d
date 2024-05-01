@@ -84,20 +84,31 @@ keyword come from `active region` or `thing-at-point`"
 
 (require 'poetry)
 
+(defun nerd-icons-recentf-menu-filter (menu-items)
+  "Add nerd-icons to `recentf' menu items."
+  (mapcar
+   (lambda (item)
+     (cons (concat (nerd-icons-icon-for-file (car item)) " " (car item))
+           (cdr item)))
+   menu-items))
+
 (defun my/dashboard ()
   "My simple dashboard"
   (interactive)
-  (recentf-dialog "*dashboard*"
-    ;; recent files list
-    (apply #'widget-create
-           `(group
-             :indent 2
-             :format "\n%v\n"
-             ,@(recentf-open-files-items recentf-list)))
-    ;; poem
-    (widget-insert (poetry-get-formatted) ?\n)
-    (widget-move 1 t)
-    (setq buffer-read-only t))
+  (let ((recentf-menu-filter
+         (if (fboundp 'nerd-icons-icon-for-file) 'nerd-icons-recentf-menu-filter nil))
+        (recentf-show-file-shortcuts-flag nil))
+    (recentf-dialog "*dashboard*"
+      ;; recent files list
+      (apply #'widget-create
+             `(group
+               :indent 2
+               :format "\n%v\n"
+               ,@(recentf-open-files-items recentf-list)))
+      ;; poem
+      (widget-insert (poetry-get-formatted) ?\n)
+      (widget-move 1 t)
+      (setq buffer-read-only t)))
   (define-key recentf-dialog-mode-map "e" #'recentf-edit-list)
   (define-key recentf-dialog-mode-map "G"
               (lambda () (interactive) (poetry-update) (my/dashboard)))
