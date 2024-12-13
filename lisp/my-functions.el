@@ -90,6 +90,7 @@ keyword come from `active region` or `thing-at-point`"
    (lambda (file)
      `(link :tag ,(if (featurep 'nerd-icons) (concat (nerd-icons-icon-for-file file) " " file) file)
             :format "%[%t\n%]"  ;; reference: (widget) Basic Types
+            :button-face (:weight normal)
             :button-prefix ""
             :button-suffix ""
             :help-echo ,(concat "Open " file)
@@ -107,6 +108,8 @@ keyword come from `active region` or `thing-at-point`"
              :indent 2
              :format "\n%v\n"
              ,@(my/recentf-file-links)))
+    (widget-insert " Startup in " (emacs-init-time "%.1f seconds, ")
+                   (format "%d packages loaded\n\n" (length package-alist)))
     ;; poem
     (widget-insert (poetry-get-formatted) ?\n)
     (widget-move 1 t)

@@ -45,6 +45,7 @@
             (setq-local show-trailing-whitespace t)
             (setq eldoc-minor-mode-string nil)
             (setq indent-tabs-mode nil)))
+(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 
 (when (display-graphic-p)
   (tool-bar-mode -1)
@@ -626,7 +627,7 @@
   (project-switch-commands '((project-find-file "Find file")
                              (consult-ripgrep "Ripgrep" ?r)
                              (project-dired "Dired" ?d)
-                             (magit "Magit" ?m))))
+                             (magit-project-status "Magit" ?m))))
 
 (use-package flymake
   :custom (flymake-mode-line-lighter ""))
