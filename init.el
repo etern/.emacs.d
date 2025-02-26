@@ -32,6 +32,7 @@
 (setq make-backup-files nil)
 (setq inhibit-startup-screen t)
 (setq completions-detailed t)
+(setq echo-keystrokes-help nil)
 ;;(setq completion-auto-help nil) ;; never show *Completions* buffer
 ;;(desktop-save-mode 1)
 
@@ -124,7 +125,7 @@
 (global-set-key (kbd "M-K") #'delete-window)
 (global-set-key (kbd "M-h") #'previous-buffer) ; unbind mark-paragraph
 (global-set-key (kbd "M-H") #'next-buffer)
-(global-set-key [remap kill-buffer] #'kill-this-buffer)
+(global-set-key [remap kill-buffer] #'kill-current-buffer)
 (global-set-key [remap just-one-space] #'cycle-spacing)
 (global-set-key [remap upcase-word] #'upcase-dwim)
 (global-set-key [remap downcase-word] #'downcase-dwim)
@@ -169,14 +170,25 @@
                       (org-next-visible-heading 1)
                       (electric-indent-local-mode -1)))
   :config
-  (defadvice org-babel-execute-src-block (around load-language nil activate)
-    "Load ob-{language} only when needed."
-    (let ((lang (org-element-property :language (org-element-at-point))))
-      (when (or (string= lang "bash") (string= lang "sh")) (setq lang "shell"))
-      (unless (cdr (assoc (intern lang) org-babel-load-languages))
-        (add-to-list 'org-babel-load-languages (cons (intern lang) t))
-        (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages))
-      ad-do-it))
+  (defun load-language-on-need (orig-fun &rest args)
+     "Load ob-{language} only when needed."
+     (let* ((element (org-element-at-point))
+            (lang (org-element-property :language element)))
+       (when (member lang '("bash" "sh")) (setq lang "shell"))
+       (unless (cdr (assoc (intern lang) org-babel-load-languages))
+         (add-to-list 'org-babel-load-languages (cons (intern lang) t))
+         (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages))
+       (apply orig-fun args)))
+  (advice-add 'org-babel-execute-src-block :around #'load-language-on-need)
+  (defun org-html-paragraph-fix-chinese-spacing (orig-fun paragraph contents info)
+    "When exporting <p></p>, join Chinese lines into a single long line"
+    (let* ((fix-regexp "[[:multibyte:]]")
+           (fixed-contents
+            (replace-regexp-in-string
+             (concat "\\(" fix-regexp "\\) *\n *\\(" fix-regexp "\\)")
+             "\\1\\2" contents)))
+      (funcall orig-fun paragraph fixed-contents info)))
+  (advice-add 'org-html-paragraph :around #'org-html-paragraph-fix-chinese-spacing)
   (require 'org-tempo) ;; use `<s` to expand src_block
   (use-package display-fill-column-indicator
     :if (not (version< emacs-version "27"))
@@ -630,6 +642,7 @@
                              (magit-project-status "Magit" ?m))))
 
 (use-package flymake
+  :defer t
   :custom (flymake-mode-line-lighter ""))
 
 (use-package pdf-view-pagemark
