@@ -311,8 +311,8 @@
   :config
   (consult-customize
    consult-ripgrep consult-xref
-   consult--source-recent-file consult--source-project-recent-file
-   consult--source-bookmark
+   consult-source-recent-file consult-source-project-recent-file
+   consult-source-bookmark
    :preview-key "M-.")
   (setq consult-project-root-function
         (lambda ()
@@ -366,18 +366,11 @@
          ("<mouse-2>" . mc/add-cursor-on-click)))
 
 (use-package dumb-jump
-  :init (add-hook 'xref-backend-functions #'dumb-jump-xref-activate 100)
-  :ensure t
-  :bind ("C-. j" . my/toggle-dumb-jump-order)
-  :config
-  (defvar my/dumb-jump-order 100)
-  (defun my/toggle-dumb-jump-order ()
-    "dumb-jump order in xref, useful to suppress etags prompt"
-    (interactive)
-    (remove-hook 'xref-backend-functions #'dumb-jump-xref-activate)
-    (setq my/dumb-jump-order (- my/dumb-jump-order))
-    (add-hook 'xref-backend-functions #'dumb-jump-xref-activate my/dumb-jump-order)
-    (message "dumb-jump %s" (if (> my/dumb-jump-order 0) "as fallback" "goes first"))))
+  :after xref
+  :init
+  (remove-hook 'xref-backend-functions #'etags--xref-backend)
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+  :ensure t)
 
 (use-package recentf
   :init (let ((inhibit-message t)) (recentf-mode))
